@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fodala.mapper.ToDoMapper">
+
+    <sql id="Base_Column_List">
+        id, title, status, description, completed, expires, schedule, important, created, username
+    </sql>
+
+    <select id="all" resultType="ToDo">
+        select
+        <include refid="Base_Column_List"/>
+        from todo
+    </select>
+
+    <select id="filter" parameterType="map" resultType="ToDo">
+        select
+        <include refid="Base_Column_List"/>
+        from todo
+        <where>
+            1 = 1
+            <if test=" map.important != null ">
+                AND important = #{map.important}
+            </if>
+            <if test="map.completed != null">
+                AND completed = #{map.completed}
+            </if>
+            <if test="map.startDate != null">
+                AND start_date &gt;= #{map.startDate}
+            </if>
+            <if test="map.endDate != null">
+                AND end_date &lt; #{map.endDate}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultType="ToDo">
+        select
+        <include refid="Base_Column_List"/>
+        from todo
+        where `id` = #{id}
+    </select>
+
+    <select id="findByDate" resultType="ToDo">
+        select
+        <include refid="Base_Column_List"/>
+        from todo
+        where `expires` BETWEEN #{start} AND #{end}
+    </select>
+
+    <insert id="insert">
+        insert into todo (`title`, `status`, `description`, `completed`,
+        `expires`, `schedule`, `important`, `created`)
+        values (#{toDo.title}, #{toDo.status}, #{toDo.description},
+        #{toDo.completed}, #{toDo.expires}, #{toDo.schedule},
+        #{toDo.important}, #{toDo.created})
+        <selectKey keyProperty="id" resultType="int">
+            select last_insert_rowid() as id
+        </selectKey>
+    </insert>
+
+    <update id="important">
+        update todo
+        set `important` = (1 - `important`)
+        where `id` = #{id}
+    </update>
+
+    <update id="completed">
+        update todo
+        set `completed` = (1 - `completed`)
+        where `id` = #{id}
+    </update>
+
+    <update id="update">
+        update todo set
+        `title` = #{toDo.title}
+        <if test="toDo.status != null">
+            , `status` = #{toDo.status}
+        </if>
+        <if test="toDo.description != null">
+            , `description` = #{toDo.description}
+        </if>
+        <if test="toDo.completed != null">
+            , `completed` = #{toDo.completed}
+        </if>
+        <if test="toDo.expires != null">
+            , `expires` = #{toDo.expires}
+        </if>
+        <if test="toDo.schedule != null">
+            , `schedule` = #{toDo.schedule}
+        </if>
+        <if test="toDo.important != null">
+            , `important` = #{toDo.important}
+        </if>
+        <!--        <if test="toDo.created != null">-->
+        <!--            `created` = #{toDo.created},-->
+        <!--        </if>-->
+        where `id` = #{toDo.id}
+    </update>
+
+    <delete id="delete">
+        delete
+        from todo
+        where `id` = #{id}
+    </delete>
+
+    <select id="history" resultType="ToDoHistory">
+        select `id`, `todo_id`, `title`, `status`, `description`, `completed`,
+        `expires`, `schedule`, `important`,
+        `created`
+        from todo_history
+        where `todo_id` = #{id}
+        order by `updated` desc
+    </select>
+
+    <select id="count" resultType="map">
+        select (select count(*) from todo) as tasks,
+        (select count(*) from todo where important = 1) as important,
+        (select count(*) from todo where completed = 1) as completed
+    </select>
+</mapper>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common :: header(metaTitle='Settings')"></head>
+
+<body class="container">
+<div class="with:80%">
+    <br/>
+    <h1>Settings</h1>
+    <br/>
+    <div class="row gutters-sm">
+        <div th:replace="~{common::#sidebar}"></div>
+        <div class="col-md-9 d-none d-md-block">
+            <div class="card">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:each="setting : ${settings}">
+                        <tr th:attr="row_id=${setting.id}" th:title="${setting.description}">
+                            <td><input class="form-control" readonly="true" th:value="${setting.name}"/></td>
+                            <td><input class="form-control" readonly="true" th:value="${setting.value}"/></td>
+                            <td><a th:href="@{setting(id=${setting.id})}"> <img
+                                    th:src="@{/images/edit-2.svg}"/></a></td>
+                            <td><a th:href="@{setting/delete(id=${setting.id})}"><img
+                                    th:src="@{/images/trash.svg}"/></a></td>
+                        </tr>
+                    </div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2 control-label">
+            <a class="btn btn-info" href="/setting" th:href="@{/setting}">Add</a>
+        </div>
+    </div>
+    <div th:replace="~{common::#bottom}"></div>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common :: header(metaTitle='Todos edit')"></head>
+
+<body class="container">
+<div class="with:80%">
+    <br/>
+    <h1 th:value="*{todo.title}">Edit Todo...</h1>
+    <br/>
+    <form class="form-horizontal" id="todo-form" method="post" th:action="@{/todo}" th:object="${todo}">
+        <input name="id" th:value="*{id}" type="hidden"/>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="title">Title</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="title" name="title" placeholder="title" th:value="*{title}"
+                       type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="status">status</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="status" name="status" placeholder="name" th:value="*{status}"
+                       type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="description">Description</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="description" name="description" placeholder="description"
+                       th:value="*{description}" type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="completed">Completed</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="completed" name="completed" placeholder="completed"
+                       th:value="*{completed}" type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="expires">expires</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="expires" name="expires" placeholder="cleaned" th:value="*{expires}"
+                       type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="schedule">Schedule</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="schedule" name="schedule" placeholder="schedule"
+                       th:value="*{schedule}" type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="important">important</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="important" name="important" placeholder="important"
+                       th:value="*{important}" type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="created">created</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="created" name="created" placeholder="created" readonly
+                       th:value="*{created}" type="text"/>
+            </div>
+        </div>
+        <br/>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-info" type="submit" value="Submit"/> <a class="btn btn-info"
+                                                                              th:href="@{/}">Back</a>
+            </div>
+        </div>
+    </form>
+    <div th:if="${not #lists.isEmpty(history)}">
+        <hr/>
+        <h1>History</h1>
+        <br/>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Important</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="todo : ${history}">
+                <th scope="row" th:text="${todo.id}">1</th>
+                <td th:text="${todo.title}">todo 1</td>
+                <td th:text="${todo.status}">Initial</td>
+                <td th:text="${todo.description}">neo@one.com</td>
+                <td th:text="${todo.important}"></td>
+                <td th:text="${todo.created}"></td>
+                <td th:text="${todo.updated}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+
+</html>

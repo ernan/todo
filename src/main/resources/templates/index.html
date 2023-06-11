@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common :: header(metaTitle='Todos list')"></head>
+
+<body class="container">
+<div class="with:80%">
+    <br/>
+    <h1>Todo List</h1>
+    <br/>
+    <div class="row gutters-sm">
+        <div th:replace="~{common::#sidebar}"></div>
+        <div class="col-md-8">
+            <form class="form-horizontal" id="new-todo-form" method="post"
+                  th:action="@{/todo}" th:object="${todo}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-row align-items-center">
+                            <textarea class="form-control form-control-lg" name="title" placeholder="Add new todo..."
+                                      rows="3" th:value="*{title}"></textarea>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-primary" type="submit" value="Add">Add</button>
+                                <button class="btn btn-primary-outline">
+                                    <img onclick="$(this).closest('form').submit();"
+                                         th:src="@{/images/calendar.svg}"/>
+                                </button>
+                                <button class="btn btn-primary-outline">
+                                    <img onclick="$(this).closest('form').submit();"
+                                         th:src="@{/images/repeat.svg}"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="card">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Expires</th>
+                        <th>Schedule</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="todo : ${todos}">
+                        <td>
+                            <form method="post" th:action="@{/importantStatus}" th:id="'important_' + ${todo.id}">
+                                <input name="id" th:value="${todo.id}" type="hidden"/>
+                                <input name="currentTab" th:value="${currentTab}" type="hidden"/>
+                                <div th:if="${todo.important} == 1">
+                                    <img onclick="$(this).closest('form').submit();"
+                                         th:src="@{/images/star-enabled.svg}"/>
+                                </div>
+                                <div th:unless="${todo.important} == 1">
+                                    <img onclick="$(this).closest('form').submit();" th:src="@{/images/star.svg}"/>
+                                </div>
+                            </form>
+                        </td>
+                        <td th:text="${todo.title}">todo 1</td>
+                        <td th:text="${todo.status}">Initial</td>
+                        <td th:text="${todo.expires}"></td>
+                        <td th:text="${todo.schedule}"></td>
+                        <td>
+                            <form method="post" th:action="@{/completedStatus}" th:id="'completed_' + ${todo.id}">
+                                <input name="id" th:value="${todo.id}" type="hidden"/>
+                                <input name="currentTab" th:value="${currentTab}" type="hidden"/>
+                                <div th:if="${todo.completed} == 1">
+                                    <img onclick="$(this).closest('form').submit();"
+                                         th:src="@{/images/check-circle.svg}"/>
+                                </div>
+                                <div th:unless="${todo.completed} == 1">
+                                    <img onclick="$(this).closest('form').submit();" th:src="@{/images/circle.svg}"/>
+                                </div>
+                            </form>
+                        </td>
+                        <td><a th:href="@{todo(id=${todo.id})}"><img th:src="@{/images/edit-2.svg}"/></a></td>
+                        <td>
+                            <form method="post" th:action="@{/delete}" th:id="'delete_' + ${todo.id}">
+                                <input name="id" th:value="${todo.id}" type="hidden"/>
+                                <input name="currentTab" th:value="${currentTab}" type="hidden"/>
+                                <img onclick="$(this).closest('form').submit();" th:src="@{/images/trash.svg}"/>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{common::#bottom}"></div>
+</div>
+
+</body>
+
+</html>

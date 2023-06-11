@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common :: header(metaTitle='Edit Settings')"></head>
+
+<body class="container">
+<div th:replace="~{common::#navbar}"></div>
+<br/>
+<h1>Edit Setting</h1>
+<br/>
+<div class="with:80%">
+    <form class="form-horizontal" id="setting-form" method="post" th:action="@{/setting}" th:object="${setting}">
+        <input name="id" th:value="*{id}" type="hidden"/>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="section">Section</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="section" name="section" placeholder="section" th:value="*{section}"
+                       type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="name">Name</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="name" name="name" placeholder="name" th:value="*{name}"
+                       type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="value">Value</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="value" name="value" placeholder="value" th:value="*{value}"
+                       type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="description">Description</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="description" name="description" placeholder="description"
+                       th:value="*{description}" type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="seq">Sequence</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="seq" name="seq" placeholder="seq" th:value="*{seq}" type="text"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-info" type="submit" value="Submit"/> <a class="btn btn-info" href="/settings"
+                                                                              th:href="@{/settings}">Back</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="with:80%" th:if="${not #lists.isEmpty(history)}">
+    <h1>Setting History</h1>
+    <br/>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Section</th>
+            <th>Name</th>
+            <th>Value</th>
+            <th>Description</th>
+            <th>Seq</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="setting : ${history}">
+            <th scope="row" th:text="${setting.id}">1</th>
+            <td th:text="${setting.section}">setting 1</td>
+            <td th:text="${setting.name}">Initial</td>
+            <td th:text="${setting.value}">neo@one.com</td>
+            <td th:text="${setting.description}"></td>
+            <td th:text="${setting.seq}"></td>
+            <td th:text="${setting.created}"></td>
+            <td th:text="${setting.updated}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+
+</html>
