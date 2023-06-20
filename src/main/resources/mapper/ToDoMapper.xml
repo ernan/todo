@@ -108,7 +108,7 @@
     <select id="history" resultType="ToDoHistory">
         select `id`, `todo_id`, `title`, `status`, `description`, `completed`,
         `expires`, `schedule`, `important`,
-        `created`
+        `created`, `updated`
         from todo_history
         where `todo_id` = #{id}
         order by `updated` desc
