@@ -6,7 +6,8 @@ public class ToDoHistory {
     private String status;
     private String description;
     private Integer completed;
-    private String expires;
+    private String start;
+    private String end;
     private String schedule;
     private String username;
     private String important;
@@ -16,18 +17,27 @@ public class ToDoHistory {
     public ToDoHistory() {
     }
 
-    public ToDoHistory(Integer id, String title, String status, String description, Integer completed, String expires, String schedule, String username, String important, String created, String updated) {
+    public ToDoHistory(Integer id, String title, String status, String description, Integer completed, String start, String end, String schedule, String username, String important, String created, String updated) {
         this.id = id;
         this.title = title;
         this.status = status;
         this.description = description;
         this.completed = completed;
-        this.expires = expires;
+        this.start = start;
+        this.end = end;
         this.schedule = schedule;
         this.username = username;
         this.important = important;
         this.created = created;
         this.updated = updated;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
     }
 
     public Integer getId() {
@@ -70,12 +80,12 @@ public class ToDoHistory {
         this.completed = completed;
     }
 
-    public String getExpires() {
-        return expires;
+    public String getStart() {
+        return start;
     }
 
-    public void setExpires(String expires) {
-        this.expires = expires;
+    public void setStart(String start) {
+        this.start = start;
     }
 
     public String getSchedule() {

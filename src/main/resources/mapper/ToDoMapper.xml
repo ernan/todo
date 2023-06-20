@@ -5,7 +5,7 @@
 <mapper namespace="com.fodala.mapper.ToDoMapper">
 
     <sql id="Base_Column_List">
-        id, title, status, description, completed, expires, schedule, important, created, username
+        id, title, status, description, completed, start, end, schedule, important, created, username
     </sql>
 
     <select id="all" resultType="ToDo">
@@ -46,14 +46,14 @@
         select
         <include refid="Base_Column_List"/>
         from todo
-        where `expires` BETWEEN #{start} AND #{end}
+        where `start` BETWEEN #{start} AND #{end}
     </select>
 
     <insert id="insert">
         insert into todo (`title`, `status`, `description`, `completed`,
-        `expires`, `schedule`, `important`, `created`)
+        `start`, `end`, `schedule`, `important`, `created`)
         values (#{toDo.title}, #{toDo.status}, #{toDo.description},
-        #{toDo.completed}, #{toDo.expires}, #{toDo.schedule},
+        #{toDo.completed}, #{toDo.start}, #{toDo.end}, #{toDo.schedule},
         #{toDo.important}, #{toDo.created})
         <selectKey keyProperty="id" resultType="int">
             select last_insert_rowid() as id
@@ -84,8 +84,11 @@
         <if test="toDo.completed != null">
             , `completed` = #{toDo.completed}
         </if>
-        <if test="toDo.expires != null">
-            , `expires` = #{toDo.expires}
+        <if test="toDo.start != null">
+            , `start` = #{toDo.start}
+        </if>
+        <if test="toDo.end != null">
+            , `end` = #{toDo.end}
         </if>
         <if test="toDo.schedule != null">
             , `schedule` = #{toDo.schedule}
@@ -107,7 +110,7 @@
 
     <select id="history" resultType="ToDoHistory">
         select `id`, `todo_id`, `title`, `status`, `description`, `completed`,
-        `expires`, `schedule`, `important`,
+        `start`, `end`, `schedule`, `important`,
         `created`, `updated`
         from todo_history
         where `todo_id` = #{id}

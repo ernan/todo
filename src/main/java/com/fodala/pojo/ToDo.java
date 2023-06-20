@@ -3,10 +3,11 @@ package com.fodala.pojo;
 public class ToDo {
     private Integer id;
     private String title;
+    private Integer completed;
     private String status;
     private String description;
-    private Integer completed;
-    private String expires;
+    private String start;
+    private String end;
     private String schedule;
     private String username;
     private Integer important;
@@ -15,33 +16,26 @@ public class ToDo {
     public ToDo() {
     }
 
-    public ToDo(Integer id, String title, String status, String description, Integer completed, String expires, String schedule, String username, Integer important, String created) {
+    public ToDo(Integer id, String title, String status, String description, Integer completed, String start, String end, String schedule, String username, Integer important, String created) {
         this.id = id;
         this.title = title;
         this.status = status;
         this.description = description;
         this.completed = completed;
-        this.expires = expires;
+        this.start = start;
+        this.end = end;
         this.schedule = schedule;
         this.username = username;
         this.important = important;
         this.created = created;
     }
 
-    @Override
-    public String toString() {
-        return "ToDo{" +
-                "id=" + id +
-                ", completed=" + completed +
-                ", title='" + title + '\'' +
-                ", status='" + status + '\'' +
-                ", description='" + description + '\'' +
-                ", expires='" + expires + '\'' +
-                ", schedule='" + schedule + '\'' +
-                ", username='" + username + '\'' +
-                ", important=" + important +
-                ", created='" + created + '\'' +
-                '}';
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
     }
 
     public Integer getId() {
@@ -50,6 +44,23 @@ public class ToDo {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "ToDo{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", completed=" + completed +
+                ", status='" + status + '\'' +
+                ", description='" + description + '\'' +
+                ", start='" + start + '\'' +
+                ", end='" + end + '\'' +
+                ", schedule='" + schedule + '\'' +
+                ", username='" + username + '\'' +
+                ", important=" + important +
+                ", created='" + created + '\'' +
+                '}';
     }
 
     public String getTitle() {
@@ -84,12 +95,12 @@ public class ToDo {
         this.completed = completed;
     }
 
-    public String getExpires() {
-        return expires;
+    public String getStart() {
+        return start;
     }
 
-    public void setExpires(String expires) {
-        this.expires = expires;
+    public void setStart(String start) {
+        this.start = start;
     }
 
     public String getSchedule() {

@@ -40,8 +40,8 @@
                         <th></th>
                         <th>Title</th>
                         <th>Status</th>
-                        <th>Expires</th>
-                        <th>Schedule</th>
+                        <th>Start</th>
+                        <th>End</th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -64,8 +64,8 @@
                         </td>
                         <td th:text="${todo.title}">todo 1</td>
                         <td th:text="${todo.status}">Initial</td>
-                        <td th:text="${todo.expires}"></td>
-                        <td th:text="${todo.schedule}"></td>
+                        <td th:text="${todo.start}"></td>
+                        <td th:text="${todo.end}"></td>
                         <td>
                             <form method="post" th:action="@{/completedStatus}" th:id="'completed_' + ${todo.id}">
                                 <input name="id" th:value="${todo.id}" type="hidden"/>
