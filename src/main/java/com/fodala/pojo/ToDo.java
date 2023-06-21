@@ -1,5 +1,8 @@
 package com.fodala.pojo;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class ToDo {
     private Integer id;
     private String title;
@@ -92,6 +95,11 @@ public class ToDo {
     }
 
     public void setCompleted(Integer completed) {
+        if (completed == 1) {
+            end = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        } else {
+            end = "";
+        }
         this.completed = completed;
     }
 
