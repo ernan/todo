@@ -31,4 +31,6 @@ public interface ToDoService {
     List<ToDo> findByDate(LocalDateTime start, LocalDateTime end);
 
     List<ToDo> filter(Map<String, Object> map);
+
+    List<Map<String, Object>> notifications();
 }

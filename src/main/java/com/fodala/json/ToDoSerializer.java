@@ -15,8 +15,10 @@ public class ToDoSerializer extends StdSerializer<ToDo> {
     @Override
     public void serialize(ToDo toDo, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
-        gen.writeStringField("title", toDo.getTitle());
         gen.writeNumberField("id", toDo.getId());
+        gen.writeStringField("title", toDo.getTitle());
+        gen.writeNumberField("completed", toDo.getCompleted());
+        gen.writeNumberField("important", toDo.getImportant());
         if (toDo.getStart() != null) {
             gen.writeStringField("start", toDo.getStart());
         }

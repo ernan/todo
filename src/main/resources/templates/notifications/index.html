@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common :: header(metaTitle='Notifications')"></head>
+
+<body class="container">
+<link href="https://unpkg.com/bootstrap-table@1.22.0/dist/bootstrap-table.min.css" rel="stylesheet">
+
+<script src="https://unpkg.com/bootstrap-table@1.22.0/dist/bootstrap-table.min.js"></script>
+
+<div class="with:80%">
+    <br/>
+    <h1>Notifications</h1>
+    <br/>
+    <div class="row gutters-sm">
+        <div th:replace="~{common::#sidebar}"></div>
+        <div class="col-md-8">
+            <table id="table">
+                <thead>
+                <tr>
+                    <th data-field="important">Important</th>
+                    <th data-field="title">Title</th>
+                    <th data-field="start">Start</th>
+                    <th data-field="end">End</th>
+                    <th data-field="updated">Updated</th>
+                    <th data-field="created">Created</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <input id="notifications" th:value="${notifications}" type="hidden"/>
+</div>
+<div th:replace="~{common::#bottom}"></div>
+</div>
+
+<script>
+    var $table = $('#table')
+    $(function() {
+        var val = $("#notifications").val();
+        var data = JSON.parse(val.replace(/&quot;/g,'"'));
+        $table.bootstrapTable({data: data})
+    })
+
+</script>
+
+</body>
+
+</html>

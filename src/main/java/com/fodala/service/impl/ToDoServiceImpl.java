@@ -79,4 +79,9 @@ public class ToDoServiceImpl implements ToDoService {
     public List<ToDo> filter(Map<String, Object> map) {
         return mapper.filter(map);
     }
+
+    @Override
+    public List<Map<String, Object>> notifications() {
+        return mapper.notifications();
+    }
 }

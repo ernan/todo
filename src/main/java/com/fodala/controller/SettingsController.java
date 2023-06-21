@@ -2,6 +2,7 @@ package com.fodala.controller;
 
 import com.fodala.pojo.Setting;
 import com.fodala.service.SettingsService;
+import com.fodala.service.ToDoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class SettingsController {
 
     @Autowired
     private SettingsService settingsService;
+    @Autowired
+    private ToDoService toDoService;
 
     @RequestMapping(value = "/setting", method = RequestMethod.GET)
     public String setting(@RequestParam(value = "id", required = false) Integer id, Model model) {
@@ -69,6 +72,7 @@ public class SettingsController {
         logger.info("Found {} Settings", settingList.size());
         model.addAttribute("settings", settingList);
         model.addAttribute("currentTab", "settings");
+        model.addAttribute("count", toDoService.count());
         return "setting/list";
     }
 }

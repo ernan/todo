@@ -9,8 +9,14 @@ insert into todo(title, description, status, completed) VALUES ('Buy pens today'
 insert into todo(title, description, status, start) VALUES ('Buy jotter today', 'Shopping', 'New', strftime('%Y-%m-%d','now'));
 insert into todo(title, description, status, start) VALUES ('Interview', 'Shopping', 'New', strftime('%Y-%m-%d','now'));
 insert into todo(title, description, status, start) VALUES ('Dinner', 'Shopping', 'New', strftime('%Y-%m-%d','now'));
+insert into todo(title, description, status, start, `end`, completed) VALUES ('Exercise', 'Health', 'New', strftime('%Y-%m-%d','now', '-4 day'), strftime('%Y-%m-%d','now', '-3 day'), 1);
+insert into todo(title, description, status, start, `end`, completed) VALUES ('Exercise', 'Health', 'New', strftime('%Y-%m-%d','now', '-2 day'), strftime('%Y-%m-%d','now', '-1 day'), 1);
 insert into todo(title, description, status, start, completed) VALUES ('Exercise', 'Health', 'New', strftime('%Y-%m-%d','now'), 1);
 insert into todo(title, description, status, start, completed) VALUES ('Yoga', 'Health', 'New', strftime('%Y-%m-%d','now'), 1);
+insert into todo(title, description, status, start, `end`,completed) VALUES ('Yesterday', 'Life', 'New', strftime('%Y-%m-%d','now', '-1 day'), strftime('%Y-%m-%d','now'), 1);
+insert into todo(title, description, status, start, completed) VALUES ('Tomorrow', 'Life', 'New', strftime('%Y-%m-%d','now', '+1 day'), 0);
+insert into todo(title, description, status, start, completed) VALUES ('Start New Course', 'Life', 'New', strftime('%Y-%m-%d','now', '+100 day'), 0);
+insert into todo(title, description, status, start, completed) VALUES ('Move House', 'Life', 'New', strftime('%Y-%m-%d','now', '+200 day'), 0);
 
 
 insert into setting(section, name, value) VALUES ('default', 'Theme', 'Light');

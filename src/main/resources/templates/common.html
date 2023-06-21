@@ -55,6 +55,8 @@
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                     My Day
+                    <span class="badge badge-default" th:classappend="${currentTab == 'myday'} ? '':'bg-secondary'"
+                          th:text="${count?.myday}"></span>
                 </a> <a class="nav-item nav-link has-icon nav-link-faded"
                         data-toggle="tab" th:classappend="${currentTab == 'important'} ? 'active':''"
                         th:href="@{/important}">
@@ -65,7 +67,8 @@
                             points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                 </svg>
                 Important
-                <span class="badge badge-dark" th:text="${count?.important}"></span>
+                <span class="badge badge-default" th:classappend="${currentTab == 'important'} ? '':'bg-secondary'"
+                      th:text="${count?.important}"></span>
             </a> <a class="nav-item nav-link has-icon nav-link-faded"
                     data-toggle="tab" th:classappend="${currentTab == 'planned'} ? 'active':''"
                     th:href="@{/planned}">
@@ -77,7 +80,8 @@
                     <line x1="17.5" x2="9" y1="15" y2="15"/>
                 </svg>
                 Planned
-                <span class="badge badge-dark" th:text="${count?.tasks}"></span>
+                <span class="badge badge-default" th:classappend="${currentTab == 'planned'} ? '':'bg-secondary'"
+                      th:text="${count?.planned}"></span>
             </a> <a class="nav-item nav-link has-icon nav-link-faded"
                     data-toggle="tab" th:classappend="${currentTab == 'settings'} ? 'active':''"
                     th:href="@{/settings}">
@@ -90,8 +94,8 @@
                 </svg>
                 Settings
             </a> <a class="nav-item nav-link has-icon nav-link-faded"
-                    data-toggle="tab" th:classappend="${currentTab == 'notification'} ? 'active':''"
-                    th:href="@{/tasks}">
+                    data-toggle="tab" th:classappend="${currentTab == 'notifications'} ? 'active':''"
+                    th:href="@{/notifications}">
                 <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
                      stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
                      xmlns="http://www.w3.org/2000/svg">
@@ -108,7 +112,8 @@
                     <polyline points="9 22 9 12 15 12 15 22"/>
                 </svg>
                 Tasks
-                <span class="badge badge-dark" th:text="${count?.tasks}"></span>
+                <span class="badge badge-default" th:classappend="${currentTab == 'tasks'} ? '':'bg-secondary'"
+                      th:text="${count?.tasks}"></span>
             </a>
                 <a class="nav-item nav-link has-icon nav-link-faded"
                    data-toggle="tab" th:classappend="${currentTab == 'calendar'} ? 'active':''"

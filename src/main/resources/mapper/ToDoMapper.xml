@@ -50,10 +50,10 @@
     </select>
 
     <insert id="insert">
-        insert into todo (`title`, `status`, `description`, `completed`,
-        `start`, `end`, `schedule`, `important`, `created`)
-        values (#{toDo.title}, #{toDo.status}, #{toDo.description},
-        #{toDo.completed}, #{toDo.start}, #{toDo.end}, #{toDo.schedule},
+        insert into todo (`title`, `status`, `description`, `completed`, `start`, `end`, `schedule`, `important`,
+        `created`)
+        values (#{toDo.title}, #{toDo.status}, #{toDo.description}, #{toDo.completed}, #{toDo.start}, #{toDo.end},
+        #{toDo.schedule},
         #{toDo.important}, #{toDo.created})
         <selectKey keyProperty="id" resultType="int">
             select last_insert_rowid() as id
@@ -68,7 +68,8 @@
 
     <update id="completed">
         update todo
-        set `completed` = (1 - `completed`)
+        set `completed` = (1 - `completed`),
+        `end` = IIF(1 - `completed`, strftime('%Y-%m-%dT%H:%M:%S','now'), '')
         where `id` = #{id}
     </update>
 
@@ -96,9 +97,6 @@
         <if test="toDo.important != null">
             , `important` = #{toDo.important}
         </if>
-        <!--        <if test="toDo.created != null">-->
-        <!--            `created` = #{toDo.created},-->
-        <!--        </if>-->
         where `id` = #{toDo.id}
     </update>
 
@@ -110,8 +108,7 @@
 
     <select id="history" resultType="ToDoHistory">
         select `id`, `todo_id`, `title`, `status`, `description`, `completed`,
-        `start`, `end`, `schedule`, `important`,
-        `created`, `updated`
+        `start`, `end`, `schedule`, `important`, `created`, `updated`
         from todo_history
         where `todo_id` = #{id}
         order by `updated` desc
@@ -120,6 +117,16 @@
     <select id="count" resultType="map">
         select (select count(*) from todo) as tasks,
         (select count(*) from todo where important = 1) as important,
-        (select count(*) from todo where completed = 1) as completed
+        (select count(*) from todo where completed = 1) as completed,
+        (select count(*) from todo where start BETWEEN strftime('%Y-%m-%d','now') AND strftime('%Y-%m-%d', 'now', '+1
+        day')) as myday,
+        (select count(*) from todo where start BETWEEN strftime('%Y-%m-%d','now') AND strftime('%Y-%m-%d', 'now', '+100
+        year')) as planned
     </select>
+
+
+    <select id="notifications" resultType="map">
+        select * from todo_history order by updated desc
+    </select>
+
 </mapper>

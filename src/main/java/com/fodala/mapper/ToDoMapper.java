@@ -31,4 +31,6 @@ public interface ToDoMapper {
     List<ToDo> filter(@Param("map") Map<String, Object> map);
 
     Map<String, Object> count();
+
+    List<Map<String, Object>> notifications();
 }

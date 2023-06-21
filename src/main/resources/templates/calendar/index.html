@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="todos" th:value="${todos}"/>
+    <input id="todos" th:value="${todos}" type="hidden"/>
 </div>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 <script>
@@ -48,6 +48,9 @@
                 window.location.href = window.location.href.replace('calendar', 'todo?id=' + id);
             }
         }
+
+
+
 
 </script>
 </body>

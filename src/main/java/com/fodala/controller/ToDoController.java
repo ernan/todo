@@ -75,7 +75,6 @@ public class ToDoController {
     }
 
     void addAttributes(Model model, ListFilter listFilter, Tab tab, List<ToDo> todos) {
-        logger.info("{}", todos.get(0));
         model.addAttribute("todo", new ToDo());
         model.addAttribute("filter", listFilter);
         model.addAttribute("todos", todos);
@@ -108,7 +107,7 @@ public class ToDoController {
     @RequestMapping(value = "/planned", method = RequestMethod.GET)
     public String planned(Model model) {
         logger.info("Getting all planned todos");
-        LocalDateTime start = LocalDateTime.now().minusDays(10);
+        LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusYears(100L);
         addAttributes(model, ListFilter.ALL, Tab.Planned, toDoService.findByDate(start, end));
         return "/index";

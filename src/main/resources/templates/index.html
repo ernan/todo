@@ -38,17 +38,30 @@
                     <thead>
                     <tr>
                         <th></th>
+                        <th></th>
                         <th>Title</th>
                         <th>Status</th>
                         <th>Start</th>
                         <th>End</th>
                         <th></th>
                         <th></th>
-                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="todo : ${todos}">
+                        <td>
+                            <form method="post" th:action="@{/completedStatus}" th:id="'completed_' + ${todo.id}">
+                                <input name="id" th:value="${todo.id}" type="hidden"/>
+                                <input name="currentTab" th:value="${currentTab}" type="hidden"/>
+                                <div th:if="${todo.completed} == 1">
+                                    <img onclick="$(this).closest('form').submit();"
+                                         th:src="@{/images/check-circle.svg}"/>
+                                </div>
+                                <div th:unless="${todo.completed} == 1">
+                                    <img onclick="$(this).closest('form').submit();" th:src="@{/images/circle.svg}"/>
+                                </div>
+                            </form>
+                        </td>
                         <td>
                             <form method="post" th:action="@{/importantStatus}" th:id="'important_' + ${todo.id}">
                                 <input name="id" th:value="${todo.id}" type="hidden"/>
@@ -66,19 +79,6 @@
                         <td th:text="${todo.status}">Initial</td>
                         <td th:text="${todo.start}"></td>
                         <td th:text="${todo.end}"></td>
-                        <td>
-                            <form method="post" th:action="@{/completedStatus}" th:id="'completed_' + ${todo.id}">
-                                <input name="id" th:value="${todo.id}" type="hidden"/>
-                                <input name="currentTab" th:value="${currentTab}" type="hidden"/>
-                                <div th:if="${todo.completed} == 1">
-                                    <img onclick="$(this).closest('form').submit();"
-                                         th:src="@{/images/check-circle.svg}"/>
-                                </div>
-                                <div th:unless="${todo.completed} == 1">
-                                    <img onclick="$(this).closest('form').submit();" th:src="@{/images/circle.svg}"/>
-                                </div>
-                            </form>
-                        </td>
                         <td><a th:href="@{todo(id=${todo.id})}"><img th:src="@{/images/edit-2.svg}"/></a></td>
                         <td>
                             <form method="post" th:action="@{/delete}" th:id="'delete_' + ${todo.id}">
