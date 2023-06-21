@@ -42,13 +42,32 @@ public class CalendarController {
         for (ToDo toDo : list) {
             try {
                 String json = ow.writeValueAsString(toDo);
+                if (builder.length() > 2 && json.length() > 0) {
+                    builder.append(",");
+                }
                 builder.append(json);
-                builder.append(",");
             } catch (JsonProcessingException e) {
                 logger.error(e.getMessage(), e);
             }
         }
         builder.append("]");
+
+//        JsonFactory jsonFactory = new JsonFactory();
+//        // Create a JsonGenerator instance
+//        try (JsonGenerator jsonGenerator = jsonFactory.createGenerator(os)) {
+//            // Configure the JsonGenerator to pretty print the output
+//            jsonGenerator.useDefaultPrettyPrinter();
+//            // Write the start array token
+//            jsonGenerator.writeStartArray();
+//            // Iterate over the contacts and write each contact as a JSON object
+//            for (Contact contact : contacts) {
+//                writeContact(jsonGenerator, contact);
+//            }
+//            // Write the end array token
+//            jsonGenerator.writeEndArray();
+//        }
+
+
         String result = builder.toString();
         logger.info(result);
         return builder.toString();

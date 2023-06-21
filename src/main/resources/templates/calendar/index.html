@@ -6,7 +6,6 @@
 
 <body class="container">
 <div class="with:80%">
-    <div th:replace="~{common::#navbar}"></div>
     <br/>
     <h1>Calendar</h1>
     <br/>
@@ -28,15 +27,28 @@
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: getToDos()
+                events: getToDos(),
+                eventClick: function(info) {
+                    console.log('Event: ' + info.event.title);
+                    console.log('Event Id: ' + info.event.id);
+                    info.el.style.borderColor = 'green';
+                    editToDo(info.event.id);
+                }
             });
             calendar.render();
         });
 
         function getToDos(){
             var val = $("#todos").val();
-            return val;
+            return JSON.parse(val.replace(/&quot;/g,'"'));
         }
+
+        function editToDo(id){
+            if (id) {
+                window.location.href = window.location.href.replace('calendar', 'todo?id=' + id);
+            }
+        }
+
 </script>
 </body>
 
