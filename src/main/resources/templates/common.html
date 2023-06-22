@@ -44,9 +44,12 @@
 
 <div class="col-md-3 d-none d-md-block" id="sidebar">
     <div class="card">
-        <form class="d-flex" role="search">
-            <input aria-label="Search" class="form-control me-2" placeholder="Search" type="search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+        <form class="d-flex" method="post" role="search" th:action="@{/search}">
+            <input aria-label="Search" class="form-control me-2" id="search" name="search" placeholder="Search"
+                   th:classappend="${currentTab == 'search'} ? 'active':''" th:value="${search}" type="search">
+            <button class="btn btn-outline-primary" type="submit">
+                <img onclick="$(this).closest('form').submit();"
+                     th:src="@{/images/search.svg}"/></button>
         </form>
         <div class="card-body">
             <nav class="nav flex-column nav-pills nav-gap-y-1">

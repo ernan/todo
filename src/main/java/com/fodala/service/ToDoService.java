@@ -32,5 +32,7 @@ public interface ToDoService {
 
     List<ToDo> filter(Map<String, Object> map);
 
+    List<ToDo> search(String search);
+
     List<Map<String, Object>> notifications();
 }

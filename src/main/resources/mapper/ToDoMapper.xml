@@ -49,6 +49,14 @@
         where `start` BETWEEN #{start} AND #{end}
     </select>
 
+    <select id="search" resultType="ToDo">
+        <!--        <bind name="pattern" value="'%' + _parameter.getSearch() + '%'" />-->
+        select
+        <include refid="Base_Column_List"/>
+        from todo
+        where `title` like #{search}
+    </select>
+
     <insert id="insert">
         insert into todo (`title`, `status`, `description`, `completed`, `start`, `end`, `schedule`, `important`,
         `created`)

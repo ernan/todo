@@ -30,6 +30,8 @@ public interface ToDoMapper {
 
     List<ToDo> filter(@Param("map") Map<String, Object> map);
 
+    List<ToDo> search(@Param("search") String search);
+
     Map<String, Object> count();
 
     List<Map<String, Object>> notifications();

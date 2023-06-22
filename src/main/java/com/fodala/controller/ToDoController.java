@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-
 @Controller
 public class ToDoController {
     private static final Logger logger = LoggerFactory.getLogger(ToDoController.class);
@@ -167,6 +166,15 @@ public class ToDoController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public String search(@RequestParam(value = "search", required = false) String search, Model model) {
+        logger.info("Finding tasks containing text");
+        model.addAttribute("search", search);
+        List<ToDo> toDos = toDoService.search(search);
+        addAttributes(model, ListFilter.ALL, Tab.Search, toDos);
+        return "index";
+    }
+
     enum ListFilter {
         ALL,
         ACTIVE,
@@ -177,7 +185,8 @@ public class ToDoController {
         MyDay("myday"),
         Planned("planned"),
         Important("important"),
-        Tasks("tasks");
+        Tasks("tasks"),
+        Search("search");
         final String value;
 
         Tab(String value) {

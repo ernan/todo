@@ -81,6 +81,11 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
+    public List<ToDo> search(String search) {
+        return mapper.search(search);
+    }
+
+    @Override
     public List<Map<String, Object>> notifications() {
         return mapper.notifications();
     }

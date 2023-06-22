@@ -17,9 +17,12 @@
                     <div class="card-body">
                         <div class="d-flex flex-row align-items-center">
                             <textarea class="form-control form-control-lg" name="title" placeholder="Add new todo..."
-                                      rows="3" th:value="*{title}"></textarea>
+                                      rows="4" th:value="*{title}"></textarea>
                             <div class="btn-group-vertical">
-                                <button class="btn btn-primary" type="submit" value="Add">Add</button>
+                                <button class="btn btn-outline-primary" type="submit" value="Add">
+                                    <img onclick="$(this).closest('form').submit();"
+                                         th:src="@{/images/check.svg}"/>
+                                </button>
                                 <button class="btn btn-primary-outline">
                                     <img onclick="$(this).closest('form').submit();"
                                          th:src="@{/images/calendar.svg}"/>
