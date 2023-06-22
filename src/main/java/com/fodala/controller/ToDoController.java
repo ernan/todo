@@ -64,14 +64,14 @@ public class ToDoController {
     public String indexActive(Model model) {
         addAttributes(model, ListFilter.ACTIVE, Tab.Tasks,
                 toDoService.filter(Collections.singletonMap("completed", 0)));
-        return "/index";
+        return "index";
     }
 
     @GetMapping("/completed")
     public String indexCompleted(Model model) {
         addAttributes(model, ListFilter.COMPLETED, Tab.Tasks,
                 toDoService.filter(Collections.singletonMap("completed", 1)));
-        return "/index";
+        return "index";
     }
 
     void addAttributes(Model model, ListFilter listFilter, Tab tab, List<ToDo> todos) {
@@ -93,7 +93,7 @@ public class ToDoController {
     public String home(Model model) {
         logger.info("Getting all todos");
         addAttributes(model, ListFilter.ALL, Tab.Tasks, toDoService.all());
-        return "/index";
+        return "index";
     }
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
@@ -101,7 +101,7 @@ public class ToDoController {
         logger.info("Getting all tasks");
         model.addAttribute("todos", toDoService.all());
         addAttributes(model, ListFilter.ALL, Tab.Tasks, toDoService.all());
-        return "/index";
+        return "index";
     }
 
     @RequestMapping(value = "/planned", method = RequestMethod.GET)
@@ -110,14 +110,14 @@ public class ToDoController {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusYears(100L);
         addAttributes(model, ListFilter.ALL, Tab.Planned, toDoService.findByDate(start, end));
-        return "/index";
+        return "index";
     }
 
     @RequestMapping(value = "/important", method = RequestMethod.GET)
     public String important(Model model) {
         logger.info("Getting all important todos");
         addAttributes(model, ListFilter.ALL, Tab.Important, toDoService.filter(Collections.singletonMap("important", 1)));
-        return "/index";
+        return "index";
     }
 
     @RequestMapping(value = "/myday", method = RequestMethod.GET)
@@ -126,7 +126,7 @@ public class ToDoController {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusDays(1L);
         addAttributes(model, ListFilter.ALL, Tab.MyDay, toDoService.findByDate(start, end));
-        return "/index";
+        return "index";
     }
 
     @RequestMapping(value = "/todo", method = RequestMethod.GET)
