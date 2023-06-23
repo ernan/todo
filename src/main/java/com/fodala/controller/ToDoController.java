@@ -101,6 +101,7 @@ public class ToDoController {
     public String tasks(Model model) {
         logger.info("Getting all tasks");
         model.addAttribute("todos", toDoService.all());
+        model.addAttribute("title", "Tasks");
         addAttributes(model, ListFilter.ALL, Tab.Tasks, toDoService.all());
         return "index";
     }
@@ -109,6 +110,7 @@ public class ToDoController {
     public String planned(Model model) {
         logger.info("Getting all planned todos");
         LocalDateTime start = LocalDateTime.now();
+        model.addAttribute("title", "Planned");
         LocalDateTime end = LocalDateTime.now().plusYears(100L);
         addAttributes(model, ListFilter.ALL, Tab.Planned, toDoService.findByDate(start, end));
         return "index";
@@ -117,6 +119,7 @@ public class ToDoController {
     @RequestMapping(value = "/important", method = RequestMethod.GET)
     public String important(Model model) {
         logger.info("Getting all important todos");
+        model.addAttribute("title", "Important ToDos");
         addAttributes(model, ListFilter.ALL, Tab.Important, toDoService.filter(Collections.singletonMap("important", 1)));
         return "index";
     }
@@ -126,6 +129,7 @@ public class ToDoController {
         logger.info("Getting My Day todos");
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusDays(1L);
+        model.addAttribute("title", "My Day: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE d MMM uuuu")));
         addAttributes(model, ListFilter.ALL, Tab.MyDay, toDoService.findByDate(start, end));
         return "index";
     }
@@ -223,6 +227,7 @@ public class ToDoController {
         addAttributes(model, ListFilter.ALL, Tab.List, toDos);
         return "index";
     }
+
     enum ListFilter {
         ALL,
         ACTIVE,

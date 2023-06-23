@@ -9,4 +9,6 @@ public interface JSONService {
     String toJSON(List<ToDo> todos);
 
     String listToJSON(List<Map<String, Object>> list);
+
+    String stringListToJSON(List<String> list);
 }

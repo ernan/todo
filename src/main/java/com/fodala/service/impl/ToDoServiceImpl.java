@@ -91,7 +91,7 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    public List<String> listNames() {
+    public List<Map<String, Object>> listNames() {
         return mapper.listNames();
     }
 

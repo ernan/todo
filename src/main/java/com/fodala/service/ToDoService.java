@@ -36,7 +36,7 @@ public interface ToDoService {
 
     List<Map<String, Object>> notifications();
 
-    List<String> listNames();
+    List<Map<String, Object>> listNames();
 
     List<ToDo> list(String name);
 

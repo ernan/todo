@@ -55,4 +55,19 @@ public class JSONServiceImpl implements JSONService {
             return null;
         }
     }
+
+
+    @Override
+    public String stringListToJSON(List<String> list) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String json = objectMapper.writeValueAsString(list);
+            logger.info(json);
+            return json;
+        } catch (JsonProcessingException e) {
+            logger.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
 }

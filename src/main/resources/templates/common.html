@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head id="header" th:fragment="header">
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <link rel="icon" th:src="@{/images/favicon.ico}" type="image/x-icon">
+
+    <link href="https://unpkg.com/bootstrap-table@1.22.0/dist/bootstrap-table.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/bootstrap-table@1.22.0/dist/bootstrap-table.min.js"></script>
+
     <title th:text="${title} ? ${title} : 'ToDo Application'"></title>
+    <style>
+        .btn-link {
+            border: solid;
+            outline: none;
+            background: none;
+            cursor: pointer;
+            color: #0000EE;
+            text-decoration: none;
+            padding: 2;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+    </style>
 </head>
-<style>
-    .btn-link {
-        border: solid;
-        outline: none;
-        background: none;
-        cursor: pointer;
-        color: #0000EE;
-        text-decoration: none;
-        padding: 2;
-        font-family: inherit;
-        font-size: inherit;
-    }
-</style>
 <body>
 
 <nav class="navbar navbar-expand-lg bg-light" id="navbar">
@@ -150,13 +154,22 @@
             </nav>
             <hr/>
             <div class="list-group mb-3">
+                <table data-pagination="true" id="listTable">
+                    <thead>
+                    <tr>
+                        <th data-field="name">Name</th>
+                    </tr>
+                    </thead>
+                </table>
+
                 <table>
                     <tr th:each="listName: ${listNames}">
-                        <form method="post" th:action="@{/list}" th:id="'list_' + ${listName}">
-                            <input name="list" th:value="${listName}" type="hidden"/>
+                        <form method="post" th:action="@{/list}" th:id="'list_' + ${listName.id}">
+                            <input name="list" th:value="${listName.name}" type="hidden"/>
+                            <input name="id" th:value="${listName.id}" type="hidden"/>
                             <td><img onclick="$(this).closest('form').submit();" th:src="@{/images/list.svg}"/></td>
                             <td>
-                                <button class="btn btn-link active" th:text="${listName}" type="submit">
+                                <button class="btn btn-link active" th:text="${listName.name}" type="submit">
                                 </button>
                             </td>
                         </form>

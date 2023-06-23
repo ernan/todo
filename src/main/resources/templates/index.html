@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="common :: header(metaTitle='Todos list')"></head>
-
+<head th:replace="~{common::#header}"></head>
 <body class="container">
 <div class="with:80%">
     <br/>
-    <h1>Todo List</h1>
+    <h1>
+        <span th:remove="tag" th:text="${title}">Todo List</span>
+    </h1>
     <br/>
     <div class="row gutters-sm">
         <div th:replace="~{common::#sidebar}"></div>
@@ -98,6 +98,18 @@
     </div>
     <div th:replace="~{common::#bottom}"></div>
 </div>
+
+<input name="listNames" th:value="${listNamesJSON}" type="hidden"/>
+<script>
+    var $listTable = $('#listTable')
+    $(function() {
+        var val = $("#listNames").val();
+        var data = JSON.parse(val.replace(/&quot;/g,'"'));
+        $listTable.bootstrapTable({data: data})
+    })
+
+
+</script>
 
 </body>
 

@@ -1,9 +1,6 @@
 <!DOCTYPE html>
-<html lang='en' xmlns="http://www.w3.org/1999/html">
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="common :: header(metaTitle='Task list')"></head>
-
+<head th:replace="~{common::#header}"></head>
 <body class="container">
 <div class="with:80%">
     <br/>
@@ -19,7 +16,7 @@
             </div>
         </div>
     </div>
-    <input id="todos" th:value="${todos}" type="hidden"/>
+    <input id="todos" th:value="@{/api/todos}" type="hidden"/>
 </div>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 <script>
@@ -27,7 +24,7 @@
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: getToDos(),
+                events: $("#todos").val(),
                 eventClick: function(info) {
                     console.log('Event: ' + info.event.title);
                     console.log('Event Id: ' + info.event.id);
@@ -38,20 +35,11 @@
             calendar.render();
         });
 
-        function getToDos(){
-            var val = $("#todos").val();
-            return JSON.parse(val.replace(/&quot;/g,'"'));
-        }
-
         function editToDo(id){
             if (id) {
                 window.location.href = window.location.href.replace('calendar', 'todo?id=' + id);
             }
         }
-
-
-
-
 
 
 </script>
