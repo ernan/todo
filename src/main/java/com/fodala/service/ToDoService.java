@@ -35,4 +35,10 @@ public interface ToDoService {
     List<ToDo> search(String search);
 
     List<Map<String, Object>> notifications();
+
+    List<String> listNames();
+
+    List<ToDo> list(String name);
+
+    void createList(String list);
 }

@@ -89,4 +89,19 @@ public class ToDoServiceImpl implements ToDoService {
     public List<Map<String, Object>> notifications() {
         return mapper.notifications();
     }
+
+    @Override
+    public List<String> listNames() {
+        return mapper.listNames();
+    }
+
+    @Override
+    public List<ToDo> list(String name) {
+        return mapper.list(name);
+    }
+
+    @Override
+    public void createList(String list) {
+        mapper.createList(list);
+    }
 }

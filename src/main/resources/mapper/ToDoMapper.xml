@@ -132,9 +132,24 @@
         year')) as planned
     </select>
 
-
     <select id="notifications" resultType="map">
         select * from todo_history order by updated desc
     </select>
 
+    <select id="listNames" resultType="string">
+        select name from list order by created desc
+    </select>
+
+    <select id="list" resultType="ToDo">
+        select
+        <include refid="Base_Column_List"/>
+        from todo
+        where id in
+        (select todo_id from list_item where
+        list_id in (select id from list where name = #{name}))
+    </select>
+
+    <select id="createList" resultType="string">
+        insert into list(name) VALUES (#{list});
+    </select>
 </mapper>

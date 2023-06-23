@@ -75,12 +75,13 @@ public class ToDoController {
     }
 
     void addAttributes(Model model, ListFilter listFilter, Tab tab, List<ToDo> todos) {
-        model.addAttribute("todo", new ToDo());
+        model.addAttribute("todo", toDoService.createEmpty());
         model.addAttribute("filter", listFilter);
         model.addAttribute("todos", todos);
         model.addAttribute("currentTab", tab.toString());
         model.addAttribute("totalNumberOfItems", todos.size());
         model.addAttribute("count", toDoService.count());
+        model.addAttribute("listNames", toDoService.listNames());
     }
 
     @ExceptionHandler
@@ -189,6 +190,39 @@ public class ToDoController {
         return "index";
     }
 
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    public String list(@RequestParam(value = "list", required = false) String list, Model model, HttpSession session) {
+        logger.info("Finding tasks containing text");
+        session.setAttribute("list", list);
+        model.addAttribute("list", list);
+        List<ToDo> toDos = toDoService.list(list);
+        addAttributes(model, ListFilter.ALL, Tab.List, toDos);
+        return "index";
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String listGet(@RequestParam(value = "list", required = false) String list, Model model, HttpSession session) {
+        logger.info("Finding tasks containing text");
+        if (list == null) {
+            list = (String) session.getAttribute("list");
+        }
+        model.addAttribute("list", list);
+        model.addAttribute("title", list);
+        List<ToDo> toDos = toDoService.list(list);
+        addAttributes(model, ListFilter.ALL, Tab.List, toDos);
+        return "index";
+    }
+
+    @RequestMapping(value = "/addList", method = RequestMethod.POST)
+    public String addList(@RequestParam(value = "list") String list, Model model, HttpSession session) {
+        logger.info("Adding list {}", list);
+        toDoService.createList(list);
+        model.addAttribute("list", list);
+        model.addAttribute("title", list);
+        List<ToDo> toDos = toDoService.list(list);
+        addAttributes(model, ListFilter.ALL, Tab.List, toDos);
+        return "index";
+    }
     enum ListFilter {
         ALL,
         ACTIVE,
@@ -200,6 +234,7 @@ public class ToDoController {
         Planned("planned"),
         Important("important"),
         Tasks("tasks"),
+        List("list"),
         Search("search");
         final String value;
 

@@ -35,4 +35,10 @@ public interface ToDoMapper {
     Map<String, Object> count();
 
     List<Map<String, Object>> notifications();
+
+    List<String> listNames();
+
+    List<ToDo> list(String name);
+
+    void createList(@Param("list") String list);
 }

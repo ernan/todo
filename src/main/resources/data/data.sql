@@ -18,11 +18,27 @@ insert into todo(title, description, status, start, completed) VALUES ('Tomorrow
 insert into todo(title, description, status, start, completed) VALUES ('Start New Course', 'Life', 'New', strftime('%Y-%m-%d','now', '+100 day'), 0);
 insert into todo(title, description, status, start, completed) VALUES ('Move House', 'Life', 'New', strftime('%Y-%m-%d','now', '+200 day'), 0);
 
-
 insert into setting(section, name, value) VALUES ('default', 'Theme', 'Light');
 insert into setting(section, name, value) VALUES ('default', 'View Completed', 'False');
 insert into setting(section, name, value) VALUES ('ui', 'selectedColor', 'blue');
 insert into setting(section, name, value) VALUES ('ui', 'completedColor', 'grey');
 
 insert into list(name) VALUES ('Goals 2023');
+insert into list(name) VALUES ('Goals 2022');
+insert into list(name) VALUES ('Goals 2021');
+insert into list(name) VALUES ('Goals 2020');
+
+INSERT INTO list_item (list_id, todo_id) VALUES (1,1);
+INSERT INTO list_item (list_id, todo_id) VALUES (1,2);
+INSERT INTO list_item (list_id, todo_id) VALUES (1,3);
+INSERT INTO list_item (list_id, todo_id) VALUES (1,4);
+INSERT INTO list_item (list_id, todo_id) VALUES (2,1);
+INSERT INTO list_item (list_id, todo_id) VALUES (2,2);
+INSERT INTO list_item (list_id, todo_id) VALUES (3,3);
+INSERT INTO list_item (list_id, todo_id) VALUES (3,4);
+INSERT INTO list_item (list_id, todo_id) VALUES (4,1);
+INSERT INTO list_item (list_id, todo_id) VALUES (4,2);
+INSERT INTO list_item (list_id, todo_id) VALUES (4,3);
+INSERT INTO list_item (list_id, todo_id) VALUES (4,4);
+
 

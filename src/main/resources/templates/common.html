@@ -6,9 +6,21 @@
     <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <link rel="icon" th:src="@{/images/favicon.ico}" type="image/x-icon">
-    <title th:text="${metaTitle} ? ${metaTitle} : 'ToDo Application'"></title>
+    <title th:text="${title} ? ${title} : 'ToDo Application'"></title>
 </head>
-
+<style>
+    .btn-link {
+        border: solid;
+        outline: none;
+        background: none;
+        cursor: pointer;
+        color: #0000EE;
+        text-decoration: none;
+        padding: 2;
+        font-family: inherit;
+        font-size: inherit;
+    }
+</style>
 <body>
 
 <nav class="navbar navbar-expand-lg bg-light" id="navbar">
@@ -138,18 +150,31 @@
             </nav>
             <hr/>
             <div class="list-group mb-3">
-                <a class="list-group-item border-0 active" href="#">
-                    <img onclick="$(this).closest('form').submit();"
-                         th:src="@{/images/list.svg}"/>
-                    First item</a>
-                <a class="list-group-item border-0" href="#">
-                    <img onclick="$(this).closest('form').submit();"
-                         th:src="@{/images/list.svg}"/>
-                    Second item</a>
-                <a class="list-group-item border-0" href="#">
-                    <img onclick="$(this).closest('form').submit();"
-                         th:src="@{/images/list.svg}"/>
-                    Third item</a>
+                <table>
+                    <tr th:each="listName: ${listNames}">
+                        <form method="post" th:action="@{/list}" th:id="'list_' + ${listName}">
+                            <input name="list" th:value="${listName}" type="hidden"/>
+                            <td><img onclick="$(this).closest('form').submit();" th:src="@{/images/list.svg}"/></td>
+                            <td>
+                                <button class="btn btn-link active" th:text="${listName}" type="submit">
+                                </button>
+                            </td>
+                        </form>
+                    </tr>
+                </table>
+                <hr/>
+                <form class="form-horizontal" id="new-todo-form" method="post"
+                      th:action="@{/addList}" th:id="list_add">
+                    <div class="d-flex flex-row align-items-center">
+                        <input class="form-control" name="list" placeholder="Add new list..."/>
+                        <div class="btn-group-vertical">
+                            <button class="btn btn-outline-primary">
+                                <img onclick="$(this).closest('form').submit();"
+                                     th:src="@{/images/plus.svg}"/>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -162,8 +187,11 @@
 </div>
 
 <footer class="page-footer font-small blue" id="bottom">
-    <div class="footer-copyright text-center py-3">© 2023 Copyright:
-        <a href="#"> programmer.ie </a>
+    <div class="footer-copyright text-center py-3">
+        <a href="https://github.com/ernan/todo">
+            <img th:src="@{/images/github.svg}"/>
+        </a>
+        © 2023 Copyright: <a href="http://programmer.ie"> programmer.ie </a>
     </div>
 </footer>
 
