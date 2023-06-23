@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fodala.mapper.SessionsMapper">
+
+    <select id="all" resultType="Session">
+        select `id`, `section`, `name`, `value`, `description`, `seq`, `username`,
+        `created`
+        from session
+    </select>
+
+    <select id="findById" resultType="Session">
+        select `id`, `section`, `name`, `value`, `description`, `seq`, `username`,
+        `created`
+        from session
+        where `id` = #{id}
+    </select>
+
+    <insert id="insert">
+        insert into session (`section`, `name`, `value`, `description`, `seq`,
+        `username`, `created`)
+        values (#{session.section}, #{session.name}, #{session.value},
+        #{session.description}, #{session.seq},
+        #{session.username}, #{session.created})
+    </insert>
+
+    <update id="update">
+        update session
+        set `section` = #{session.section},
+        `name` = #{session.name},
+        `value` = #{session.value},
+        `description` = #{session.description},
+        `seq` = #{session.seq},
+        `username` = #{session.username}
+        where `id` = #{session.id}
+    </update>
+
+    <delete id="delete">
+        delete
+        from session
+        where `id` = #{id}
+    </delete>
+
+    <select id="history" resultType="SessionHistory">
+        select `id`, `session_id`,`section`, `name`, `value`, `description`, `seq`,
+        `username`, `created`, `updated`
+        from session_history
+        where `session_id` = #{id}
+        order by `updated` desc
+    </select>
+
+
+</mapper>

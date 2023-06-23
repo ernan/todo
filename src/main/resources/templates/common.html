@@ -136,6 +136,21 @@
                     Calendar
                 </a>
             </nav>
+            <hr/>
+            <div class="list-group mb-3">
+                <a class="list-group-item border-0 active" href="#">
+                    <img onclick="$(this).closest('form').submit();"
+                         th:src="@{/images/list.svg}"/>
+                    First item</a>
+                <a class="list-group-item border-0" href="#">
+                    <img onclick="$(this).closest('form').submit();"
+                         th:src="@{/images/list.svg}"/>
+                    Second item</a>
+                <a class="list-group-item border-0" href="#">
+                    <img onclick="$(this).closest('form').submit();"
+                         th:src="@{/images/list.svg}"/>
+                    Third item</a>
+            </div>
         </div>
     </div>
 </div>

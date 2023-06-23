@@ -48,10 +48,10 @@ public class JSONServiceImpl implements JSONService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String json = objectMapper.writeValueAsString(list);
-            System.out.println(json);
+            logger.info(json);
             return json;
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return null;
         }
     }

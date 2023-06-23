@@ -4,6 +4,7 @@ import com.fodala.pojo.ToDo;
 import com.fodala.service.ToDoService;
 import com.fodala.validation.ToDoValidationError;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,10 +168,23 @@ public class ToDoController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String search(@RequestParam(value = "search", required = false) String search, Model model) {
+    public String search(@RequestParam(value = "search", required = false) String search, Model model, HttpSession session) {
         logger.info("Finding tasks containing text");
         model.addAttribute("search", search);
-        List<ToDo> toDos = toDoService.search(search);
+        session.setAttribute("search", search);
+        List<ToDo> toDos = toDoService.search("%" + search + "%");
+        addAttributes(model, ListFilter.ALL, Tab.Search, toDos);
+        return "index";
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String searchGet(@RequestParam(value = "search", required = false) String search, Model model, HttpSession session) {
+        logger.info("Finding tasks containing text");
+        if (search == null) {
+            search = (String) session.getAttribute("search");
+        }
+        model.addAttribute("search", search);
+        List<ToDo> toDos = toDoService.search("%" + search + "%");
         addAttributes(model, ListFilter.ALL, Tab.Search, toDos);
         return "index";
     }

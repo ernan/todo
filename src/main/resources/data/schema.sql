@@ -65,6 +65,8 @@ BEGIN
 		);
 END;
 
+CREATE INDEX index_todo_title ON todo(title);
+
 DROP TABLE IF EXISTS setting;
 CREATE TABLE setting (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -186,6 +188,7 @@ CREATE TABLE session (
 	description TEXT NULL,
 	source TEXT NULL,
 	username TEXT NULL,
+	expiry TEXT NULL,
 	created TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -199,6 +202,7 @@ CREATE TABLE session_history (
 	description TEXT NULL,
 	source TEXT NULL,
 	username TEXT NULL,
+	expiry TEXT NULL,
 	created TEXT NULL,
 	updated TEXT NULL
 );
@@ -215,6 +219,7 @@ BEGIN
 			description,
 			source,
 			username,
+			expiry,
 			created,
 			updated
 		)
@@ -226,6 +231,90 @@ BEGIN
 			new.value,
 			new.description,
 			new.source,
+			new.username,
+			new.expiry,
+			new.created,
+			strftime('%Y-%m-%dT%H:%M:%f','now')
+		);
+END;
+
+DROP TABLE IF EXISTS list;
+CREATE TABLE list (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT NOT NULL,
+	username TEXT NULL,
+	created TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS list_history;
+CREATE TABLE list_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    list_id INTEGER,
+	name TEXT NOT NULL,
+	username TEXT NULL,
+	created TEXT NULL,
+	updated TEXT NULL
+);
+
+DROP TRIGGER IF EXISTS list_trigger;
+CREATE TRIGGER list_trigger
+   AFTER UPDATE ON list
+BEGIN
+	INSERT INTO list_history (
+			list_id,
+			name,
+			username,
+			created,
+			updated
+		)
+	VALUES
+		(
+			new.id,
+			new.name,
+			new.username,
+			new.created,
+			strftime('%Y-%m-%dT%H:%M:%f','now')
+		);
+END;
+
+
+DROP TABLE IF EXISTS list_item;
+CREATE TABLE list_item (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+	list_id INTEGER NOT NULL,
+	todo_id INTEGER NOT NULL,
+	username TEXT NULL,
+	created TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS list_item_history;
+CREATE TABLE list_item_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    list_item_id INTEGER,
+	list_id INTEGER NOT NULL,
+	todo_id INTEGER NOT NULL,
+	username TEXT NULL,
+	created TEXT NULL,
+	updated TEXT NULL
+);
+
+DROP TRIGGER IF EXISTS list_item_trigger;
+CREATE TRIGGER list_item_trigger
+   AFTER UPDATE ON list_item
+BEGIN
+	INSERT INTO list_item_history (
+			list_item_id,
+			list_id,
+			todo_id,
+			username,
+			created,
+			updated
+		)
+	VALUES
+		(
+			new.id,
+			new.list_id,
+			new.todo_id,
 			new.username,
 			new.created,
 			strftime('%Y-%m-%dT%H:%M:%f','now')

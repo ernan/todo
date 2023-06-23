@@ -26,13 +26,13 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Override
-    public void insert(Setting Campaign) {
-        settingsMapper.insert(Campaign);
+    public void insert(Setting setting) {
+        settingsMapper.insert(setting);
     }
 
     @Override
-    public void update(Setting campaign) {
-        settingsMapper.update(campaign);
+    public void update(Setting setting) {
+        settingsMapper.update(setting);
     }
 
     @Override
@@ -47,7 +47,6 @@ public class SettingsServiceImpl implements SettingsService {
 
     @Override
     public Setting createEmpty() {
-        return null;
+        return new Setting();
     }
-
 }
