@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{common::#header}"></head>
+
 <body class="container">
 <div class="with:80%">
     <br/>
@@ -11,13 +13,12 @@
     <div class="row gutters-sm">
         <div th:replace="~{common::#sidebar}"></div>
         <div class="col-md-8">
-            <form class="form-horizontal" id="new-todo-form" method="post"
-                  th:action="@{/todo}" th:object="${todo}">
+            <form class="form-horizontal" id="new-todo-form" method="post" th:action="@{/todo}" th:object="${todo}">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-row align-items-center">
-                            <textarea class="form-control form-control-lg" name="title" placeholder="Add new todo..."
-                                      rows="4" th:value="*{title}"></textarea>
+                                <textarea class="form-control form-control-lg" name="title"
+                                          placeholder="Add new todo..." rows="4" th:value="*{title}"></textarea>
                             <div class="btn-group-vertical">
                                 <button class="btn btn-outline-primary">
                                     <img onclick="$(this).closest('form').submit();"
@@ -53,7 +54,8 @@
                     <tbody>
                     <tr th:each="todo : ${todos}">
                         <td>
-                            <form method="post" th:action="@{/completedStatus}" th:id="'completed_' + ${todo.id}">
+                            <form method="post" th:action="@{/completedStatus}"
+                                  th:id="'completed_' + ${todo.id}">
                                 <input name="id" th:value="${todo.id}" type="hidden"/>
                                 <input name="currentTab" th:value="${currentTab}" type="hidden"/>
                                 <div th:if="${todo.completed} == 1">
@@ -61,12 +63,14 @@
                                          th:src="@{/images/check-circle.svg}"/>
                                 </div>
                                 <div th:unless="${todo.completed} == 1">
-                                    <img onclick="$(this).closest('form').submit();" th:src="@{/images/circle.svg}"/>
+                                    <img onclick="$(this).closest('form').submit();"
+                                         th:src="@{/images/circle.svg}"/>
                                 </div>
                             </form>
                         </td>
                         <td>
-                            <form method="post" th:action="@{/importantStatus}" th:id="'important_' + ${todo.id}">
+                            <form method="post" th:action="@{/importantStatus}"
+                                  th:id="'important_' + ${todo.id}">
                                 <input name="id" th:value="${todo.id}" type="hidden"/>
                                 <input name="currentTab" th:value="${currentTab}" type="hidden"/>
                                 <div th:if="${todo.important} == 1">
@@ -74,7 +78,8 @@
                                          th:src="@{/images/star-enabled.svg}"/>
                                 </div>
                                 <div th:unless="${todo.important} == 1">
-                                    <img onclick="$(this).closest('form').submit();" th:src="@{/images/star.svg}"/>
+                                    <img onclick="$(this).closest('form').submit();"
+                                         th:src="@{/images/star.svg}"/>
                                 </div>
                             </form>
                         </td>
@@ -87,7 +92,8 @@
                             <form method="post" th:action="@{/delete}" th:id="'delete_' + ${todo.id}">
                                 <input name="id" th:value="${todo.id}" type="hidden"/>
                                 <input name="currentTab" th:value="${currentTab}" type="hidden"/>
-                                <img onclick="$(this).closest('form').submit();" th:src="@{/images/trash.svg}"/>
+                                <img onclick="$(this).closest('form').submit();"
+                                     th:src="@{/images/trash.svg}"/>
                             </form>
                         </td>
                     </tr>
@@ -97,20 +103,8 @@
         </div>
     </div>
     <div th:replace="~{common::#bottom}"></div>
+    <input id="listNames" th:value="@{/api/list/names}" type="hidden"/>
+    <input id="list" th:value="@{/api/list/}" type="hidden"/>
 </div>
-
-<input name="listNames" th:value="${listNamesJSON}" type="hidden"/>
-<script>
-    var $listTable = $('#listTable')
-    $(function() {
-        var val = $("#listNames").val();
-        var data = JSON.parse(val.replace(/&quot;/g,'"'));
-        $listTable.bootstrapTable({data: data})
-    })
-
-
-</script>
-
 </body>
-
 </html>

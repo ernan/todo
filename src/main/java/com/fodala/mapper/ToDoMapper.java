@@ -38,6 +38,8 @@ public interface ToDoMapper {
 
     List<Map<String, Object>> listNames();
 
+    List<ToDo> listItems(@Param("id") Integer id);
+
     List<ToDo> list(String name);
 
     void createList(@Param("list") String list);

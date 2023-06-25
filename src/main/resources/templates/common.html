@@ -2,7 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head id="header" th:fragment="header">
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script crossorigin="anonymous"
+            integrity="sha512-3dZ9wIrMMij8rOH7X3kLfXAzwtcHpuYpEgQg1OA4QAob1e81H8ntUQmQm3pBudqIoySO5j0tHN4ENzA6+n2r4w=="
+            referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <link rel="icon" th:src="@{/images/favicon.ico}" type="image/x-icon">
 
@@ -22,6 +24,7 @@
             font-family: inherit;
             font-size: inherit;
         }
+
 
     </style>
 </head>
@@ -154,13 +157,65 @@
             </nav>
             <hr/>
             <div class="list-group mb-3">
-                <table data-pagination="true" id="listTable">
+                <table data-click-to-select="true" data-pagination="true" id="listTable">
                     <thead>
                     <tr>
+                        <th data-events="operateEvents"
+                            data-field="operate"
+                            data-formatter="operateFormatter">Ix
+                        </th>
                         <th data-field="name">Name</th>
                     </tr>
                     </thead>
                 </table>
+                <script>
+        var $table = $('#listTable')
+        $(function () {
+            var url = $("#listNames").val();
+            $.get(url).then(function (res) {
+                $table.bootstrapTable({
+                    data: res,
+                    showHeader: false
+                })
+            });
+        })
+
+        function operateFormatter(value, row, index) {
+            return [
+                '<a class="list" href="javascript:void(0)" title="List">',
+                '<svg xmlns="http://www.w3.org/2000/svg" ' +
+                '          width="24"' +
+                '          height="24"' +
+                '          viewBox="0 0 24 24"' +
+                '          fill="none"' +
+                '          stroke="currentColor"' +
+                '          stroke-width="2"' +
+                '          stroke-linecap="round"' +
+                '          stroke-linejoin="round">' +
+                '      <line x1="8" y1="6" x2="21" y2="6"/>' +
+                '      <line x1="8" y1="12" x2="21" y2="12"/>' +
+                '      <line x1="8" y1="18" x2="21" y2="18"/>' +
+                '      <line x1="3" y1="6" x2="3.01" y2="6"/>' +
+                '     <line x1="3" y1="12" x2="3.01" y2="12"/>' +
+                '      <line x1="3" y1="18" x2="3.01" y2="18"/>' +
+                '  </svg>',
+                '</a>'
+            ].join('')
+        }
+
+        window.operateEvents = {
+          'click.row': function (e, value, row, index) {
+             alert('You click list action, row: ' + JSON.stringify(row))
+          }
+       }
+
+       window.nameEvents = {
+          'click.row': function (e, value, row, index) {
+             alert('You click name action, row: ' + JSON.stringify(row))
+          }
+       }
+
+                </script>
 
                 <table>
                     <tr th:each="listName: ${listNames}">
@@ -176,7 +231,7 @@
                     </tr>
                 </table>
                 <hr/>
-                <form class="form-horizontal" id="new-todo-form" method="post"
+                <form class="form-horizontal" id="new-list-form" method="post"
                       th:action="@{/addList}" th:id="list_add">
                     <div class="d-flex flex-row align-items-center">
                         <input class="form-control" name="list" placeholder="Add new list..."/>
@@ -193,18 +248,11 @@
     </div>
 </div>
 
-<div class="alert alert-dismissable" id="alert" th:classappend="'alert-' + ${type}"
-     th:if="${!#strings.isEmpty(type) and !#strings.isEmpty(message)}">
-    <button aria-hidden="true" class="close" data-dismiss="alert" type="button">&times;</button>
-    <span th:text="${message}">Test</span>
-</div>
-
 <footer class="page-footer font-small blue" id="bottom">
     <div class="footer-copyright text-center py-3">
         <a href="https://github.com/ernan/todo">
             <img th:src="@{/images/github.svg}"/>
-        </a>
-        © 2023 Copyright: <a href="http://programmer.ie"> programmer.ie </a>
+        </a>© 2023 Copyright: <a href="http://programmer.ie"> programmer.ie </a>
     </div>
 </footer>
 

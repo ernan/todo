@@ -1,7 +1,11 @@
 package com.fodala.service;
 
+import com.fodala.paging.Paged;
+import com.fodala.paging.Paging;
 import com.fodala.pojo.ToDo;
 import com.fodala.pojo.ToDoHistory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,4 +45,7 @@ public interface ToDoService {
     List<ToDo> list(String name);
 
     void createList(String list);
+
+    List<ToDo> listItems(Integer id);
+
 }

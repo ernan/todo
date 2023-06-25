@@ -93,6 +93,7 @@ public class ToDoController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model model) {
         logger.info("Getting all todos");
+        model.addAttribute("title", "Tasks");
         addAttributes(model, ListFilter.ALL, Tab.Tasks, toDoService.all());
         return "index";
     }
@@ -100,7 +101,6 @@ public class ToDoController {
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     public String tasks(Model model) {
         logger.info("Getting all tasks");
-        model.addAttribute("todos", toDoService.all());
         model.addAttribute("title", "Tasks");
         addAttributes(model, ListFilter.ALL, Tab.Tasks, toDoService.all());
         return "index";
@@ -109,8 +109,8 @@ public class ToDoController {
     @RequestMapping(value = "/planned", method = RequestMethod.GET)
     public String planned(Model model) {
         logger.info("Getting all planned todos");
-        LocalDateTime start = LocalDateTime.now();
         model.addAttribute("title", "Planned");
+        LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusYears(100L);
         addAttributes(model, ListFilter.ALL, Tab.Planned, toDoService.findByDate(start, end));
         return "index";
@@ -127,24 +127,25 @@ public class ToDoController {
     @RequestMapping(value = "/myday", method = RequestMethod.GET)
     public String myDay(Model model) {
         logger.info("Getting My Day todos");
+        model.addAttribute("title", "My Day: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE d MMM uuuu")));
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusDays(1L);
-        model.addAttribute("title", "My Day: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE d MMM uuuu")));
         addAttributes(model, ListFilter.ALL, Tab.MyDay, toDoService.findByDate(start, end));
         return "index";
     }
 
     @RequestMapping(value = "/todo", method = RequestMethod.GET)
     public String todo(@RequestParam(value = "id", required = false) Integer id, Model model) {
-        ToDo todo;
+        ToDo toDo;
         if (id != null) {
-            todo = toDoService.findById(id);
+            toDo = toDoService.findById(id);
             model.addAttribute("history", toDoService.history(id));
         } else {
-            todo = toDoService.createEmpty();
+            toDo = toDoService.createEmpty();
         }
         model.addAttribute("currentTab", "tasks");
-        model.addAttribute("todo", todo);
+        model.addAttribute("title", toDo.getTitle());
+        model.addAttribute("todo", toDo);
         return "todo/edit";
     }
 
@@ -167,6 +168,7 @@ public class ToDoController {
         }
         ModelAndView modelAndView = new ModelAndView("todo/edit");
         modelAndView.addObject("todo", toDo);
+        modelAndView.addObject("title", toDo.getTitle());
         modelAndView.addObject("currentTab", "home");
         modelAndView.addObject("history", toDoService.history(toDo.getId()));
         return modelAndView;
@@ -178,6 +180,7 @@ public class ToDoController {
         model.addAttribute("search", search);
         session.setAttribute("search", search);
         List<ToDo> toDos = toDoService.search("%" + search + "%");
+        model.addAttribute("title", "Find: " + search);
         addAttributes(model, ListFilter.ALL, Tab.Search, toDos);
         return "index";
     }

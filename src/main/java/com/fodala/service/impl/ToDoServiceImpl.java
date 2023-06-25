@@ -104,4 +104,9 @@ public class ToDoServiceImpl implements ToDoService {
     public void createList(String list) {
         mapper.createList(list);
     }
+
+    @Override
+    public List<ToDo> listItems(Integer id) {
+        return mapper.listItems(id);
+    }
 }
