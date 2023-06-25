@@ -4,7 +4,8 @@
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script crossorigin="anonymous"
             integrity="sha512-3dZ9wIrMMij8rOH7X3kLfXAzwtcHpuYpEgQg1OA4QAob1e81H8ntUQmQm3pBudqIoySO5j0tHN4ENzA6+n2r4w=="
-            referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+            referrerpolicy="no-referrer"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
     <link rel="icon" th:src="@{/images/favicon.ico}" type="image/x-icon">
 
@@ -24,6 +25,8 @@
             font-family: inherit;
             font-size: inherit;
         }
+
+
 
 
     </style>
@@ -156,96 +159,97 @@
                 </a>
             </nav>
             <hr/>
-            <div class="list-group mb-3">
-                <table data-click-to-select="true" data-pagination="true" id="listTable">
-                    <thead>
-                    <tr>
-                        <th data-events="operateEvents"
-                            data-field="operate"
-                            data-formatter="operateFormatter">Ix
-                        </th>
-                        <th data-field="name">Name</th>
-                    </tr>
-                    </thead>
-                </table>
-                <script>
-        var $table = $('#listTable')
-        $(function () {
-            var url = $("#listNames").val();
-            $.get(url).then(function (res) {
-                $table.bootstrapTable({
-                    data: res,
-                    showHeader: false
-                })
-            });
-        })
+            <!--            <div class="list-group mb-3">-->
+            <!--                <table data-click-to-select="true" data-pagination="true" id="listTable">-->
+            <!--                    <thead>-->
+            <!--                    <tr>-->
+            <!--                        <th data-events="operateEvents"-->
+            <!--                            data-field="operate"-->
+            <!--                            data-formatter="operateFormatter">Ix-->
+            <!--                        </th>-->
+            <!--                        <th data-field="name">Name</th>-->
+            <!--                    </tr>-->
+            <!--                    </thead>-->
+            <!--                </table>-->
+            <!--                <script>-->
+            <!--        var $table = $('#listTable')-->
+            <!--        $(function () {-->
+            <!--            var url = $("#listNames").val();-->
+            <!--            $.get(url).then(function (res) {-->
+            <!--                $table.bootstrapTable({-->
+            <!--                    data: res,-->
+            <!--                    showHeader: false-->
+            <!--                })-->
+            <!--            });-->
+            <!--        })-->
 
-        function operateFormatter(value, row, index) {
-            return [
-                '<a class="list" href="javascript:void(0)" title="List">',
-                '<svg xmlns="http://www.w3.org/2000/svg" ' +
-                '          width="24"' +
-                '          height="24"' +
-                '          viewBox="0 0 24 24"' +
-                '          fill="none"' +
-                '          stroke="currentColor"' +
-                '          stroke-width="2"' +
-                '          stroke-linecap="round"' +
-                '          stroke-linejoin="round">' +
-                '      <line x1="8" y1="6" x2="21" y2="6"/>' +
-                '      <line x1="8" y1="12" x2="21" y2="12"/>' +
-                '      <line x1="8" y1="18" x2="21" y2="18"/>' +
-                '      <line x1="3" y1="6" x2="3.01" y2="6"/>' +
-                '     <line x1="3" y1="12" x2="3.01" y2="12"/>' +
-                '      <line x1="3" y1="18" x2="3.01" y2="18"/>' +
-                '  </svg>',
-                '</a>'
-            ].join('')
-        }
+            <!--        function operateFormatter(value, row, index) {-->
+            <!--            return [-->
+            <!--                '<a class="list" href="javascript:void(0)" title="List">',-->
+            <!--                '<svg xmlns="http://www.w3.org/2000/svg" ' +-->
+            <!--                '          width="24"' +-->
+            <!--                '          height="24"' +-->
+            <!--                '          viewBox="0 0 24 24"' +-->
+            <!--                '          fill="none"' +-->
+            <!--                '          stroke="currentColor"' +-->
+            <!--                '          stroke-width="2"' +-->
+            <!--                '          stroke-linecap="round"' +-->
+            <!--                '          stroke-linejoin="round">' +-->
+            <!--                '      <line x1="8" y1="6" x2="21" y2="6"/>' +-->
+            <!--                '      <line x1="8" y1="12" x2="21" y2="12"/>' +-->
+            <!--                '      <line x1="8" y1="18" x2="21" y2="18"/>' +-->
+            <!--                '      <line x1="3" y1="6" x2="3.01" y2="6"/>' +-->
+            <!--                '     <line x1="3" y1="12" x2="3.01" y2="12"/>' +-->
+            <!--                '      <line x1="3" y1="18" x2="3.01" y2="18"/>' +-->
+            <!--                '  </svg>',-->
+            <!--                '</a>'-->
+            <!--            ].join('')-->
+            <!--        }-->
 
-        window.operateEvents = {
-          'click.row': function (e, value, row, index) {
-             alert('You click list action, row: ' + JSON.stringify(row))
-          }
-       }
+            <!--        window.operateEvents = {-->
+            <!--          'click.row': function (e, value, row, index) {-->
+            <!--             alert('You click list action, row: ' + JSON.stringify(row))-->
+            <!--          }-->
+            <!--       }-->
 
-       window.nameEvents = {
-          'click.row': function (e, value, row, index) {
-             alert('You click name action, row: ' + JSON.stringify(row))
-          }
-       }
+            <!--       window.nameEvents = {-->
+            <!--          'click.row': function (e, value, row, index) {-->
+            <!--             alert('You click name action, row: ' + JSON.stringify(row))-->
+            <!--          }-->
+            <!--       }-->
 
-                </script>
 
-                <table>
-                    <tr th:each="listName: ${listNames}">
-                        <form method="post" th:action="@{/list}" th:id="'list_' + ${listName.id}">
-                            <input name="list" th:value="${listName.name}" type="hidden"/>
-                            <input name="id" th:value="${listName.id}" type="hidden"/>
-                            <td><img onclick="$(this).closest('form').submit();" th:src="@{/images/list.svg}"/></td>
-                            <td>
-                                <button class="btn btn-link active" th:text="${listName.name}" type="submit">
-                                </button>
-                            </td>
-                        </form>
-                    </tr>
-                </table>
-                <hr/>
-                <form class="form-horizontal" id="new-list-form" method="post"
-                      th:action="@{/addList}" th:id="list_add">
-                    <div class="d-flex flex-row align-items-center">
-                        <input class="form-control" name="list" placeholder="Add new list..."/>
-                        <div class="btn-group-vertical">
-                            <button class="btn btn-outline-primary">
-                                <img onclick="$(this).closest('form').submit();"
-                                     th:src="@{/images/plus.svg}"/>
+            <!--                </script>-->
+
+            <table>
+                <tr th:each="listName: ${listNames}">
+                    <form method="post" th:action="@{/list}" th:id="'list_' + ${listName.id}">
+                        <input name="list" th:value="${listName.name}" type="hidden"/>
+                        <input name="id" th:value="${listName.id}" type="hidden"/>
+                        <td><img onclick="$(this).closest('form').submit();" th:src="@{/images/list.svg}"/></td>
+                        <td>
+                            <button class="btn btn-link active" th:text="${listName.name}" type="submit">
                             </button>
-                        </div>
+                        </td>
+                    </form>
+                </tr>
+            </table>
+            <hr/>
+            <form class="form-horizontal" id="new-list-form" method="post"
+                  th:action="@{/addList}" th:id="list_add">
+                <div class="d-flex flex-row align-items-center">
+                    <input class="form-control" name="list" placeholder="Add new list..."/>
+                    <div class="btn-group-vertical">
+                        <button class="btn btn-outline-primary">
+                            <img onclick="$(this).closest('form').submit();"
+                                 th:src="@{/images/plus.svg}"/>
+                        </button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 </div>
 
 <footer class="page-footer font-small blue" id="bottom">

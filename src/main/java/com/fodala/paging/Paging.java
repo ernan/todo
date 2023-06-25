@@ -8,11 +8,12 @@ public class Paging {
 
     private boolean nextEnabled;
     private boolean prevEnabled;
+    private int pageSize;
+    private int pageNumber;
+    private List<PageItem> items = new ArrayList<>();
 
     public Paging() {
     }
-
-    private int pageSize;
 
     public Paging(boolean nextEnabled, boolean prevEnabled, int pageSize, int pageNumber, List<PageItem> items) {
         this.nextEnabled = nextEnabled;
@@ -20,6 +21,33 @@ public class Paging {
         this.pageSize = pageSize;
         this.pageNumber = pageNumber;
         this.items = items;
+    }
+
+    public static Paging of(int totalPages, int pageNumber, int pageSize) {
+        Paging paging = new Paging();
+        paging.setPageSize(pageSize);
+        paging.setNextEnabled(pageNumber != totalPages);
+        paging.setPrevEnabled(pageNumber != 1);
+        paging.setPageNumber(pageNumber);
+
+        if (totalPages < PAGINATION_STEP * 2 + 6) {
+            paging.addPageItems(1, totalPages + 1, pageNumber);
+
+        } else if (pageNumber < PAGINATION_STEP * 2 + 1) {
+            paging.addPageItems(1, PAGINATION_STEP * 2 + 4, pageNumber);
+            paging.last(totalPages);
+
+        } else if (pageNumber > totalPages - PAGINATION_STEP * 2) {
+            paging.first(pageNumber);
+            paging.addPageItems(totalPages - PAGINATION_STEP * 2 - 2, totalPages + 1, pageNumber);
+
+        } else {
+            paging.first(pageNumber);
+            paging.addPageItems(pageNumber - PAGINATION_STEP, pageNumber + PAGINATION_STEP + 1, pageNumber);
+            paging.last(totalPages);
+        }
+
+        return paging;
     }
 
     public boolean isNextEnabled() {
@@ -60,37 +88,6 @@ public class Paging {
 
     public void setItems(List<PageItem> items) {
         this.items = items;
-    }
-
-    private int pageNumber;
-
-    private List<PageItem> items = new ArrayList<>();
-
-    public static Paging of(int totalPages, int pageNumber, int pageSize) {
-        Paging paging = new Paging();
-        paging.setPageSize(pageSize);
-        paging.setNextEnabled(pageNumber != totalPages);
-        paging.setPrevEnabled(pageNumber != 1);
-        paging.setPageNumber(pageNumber);
-
-        if (totalPages < PAGINATION_STEP * 2 + 6) {
-            paging.addPageItems(1, totalPages + 1, pageNumber);
-
-        } else if (pageNumber < PAGINATION_STEP * 2 + 1) {
-            paging.addPageItems(1, PAGINATION_STEP * 2 + 4, pageNumber);
-            paging.last(totalPages);
-
-        } else if (pageNumber > totalPages - PAGINATION_STEP * 2) {
-            paging.first(pageNumber);
-            paging.addPageItems(totalPages - PAGINATION_STEP * 2 - 2, totalPages + 1, pageNumber);
-
-        } else {
-            paging.first(pageNumber);
-            paging.addPageItems(pageNumber - PAGINATION_STEP, pageNumber + PAGINATION_STEP + 1, pageNumber);
-            paging.last(totalPages);
-        }
-
-        return paging;
     }
 
     public void addPageItems(int from, int to, int pageNumber) {

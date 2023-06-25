@@ -1,5 +1,7 @@
 package com.fodala.paging;
+
 import org.springframework.data.domain.Page;
+
 public class Paged<T> {
     private Page<T> page;
     private Paging paging;

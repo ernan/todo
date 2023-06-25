@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.fodala.exegesis.web.mapper.UploadedFileMapper">
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fodala.mapper.UploadedFileMapper">
     <sql id="Base_Column_List">
         id, name, uploaded_path, file_size, uploaded_date, user_name, file_type
     </sql>
 
-    <select id="findAll" resultMap="BaseResultMap">
+    <select id="all" resultType="UploadedFile">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM uploaded_file
     </select>
 
     <select id="findOne" parameterType="java.lang.Long"
-        resultMap="BaseResultMap">
+            resultType="UploadedFile">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM users
         WHERE id = #{id}
     </select>
@@ -27,21 +29,21 @@
         insert into uploaded_file (id, name, uploaded_path,
         file_size, uploaded_date, user_name,
         file_type)
-        values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
-        #{uploadedPath,jdbcType=VARCHAR},
-        #{fileSize,jdbcType=INTEGER}, #{uploadedDate,jdbcType=DATE}, #{userName,jdbcType=VARCHAR},
-        #{fileType,jdbcType=VARCHAR})
+        values (#{id}, #{name},
+        #{uploadedPath},
+        #{fileSize}, #{uploadedDate}, #{userName},
+        #{fileType})
     </insert>
 
-    <update id="update" parameterType="map">
+    <update id="update" parameterType="UploadedFile">
         update uploaded_file
-        set id = #{row.id,jdbcType=INTEGER},
-        name = #{row.name,jdbcType=VARCHAR},
-        uploaded_path = #{row.uploadedPath,jdbcType=VARCHAR},
-        file_size = #{row.fileSize,jdbcType=INTEGER},
-        uploaded_date = #{row.uploadedDate,jdbcType=DATE},
-        user_name = #{row.userName,jdbcType=VARCHAR},
-        file_type = #{row.fileType,jdbcType=VARCHAR}
+        set id = #{row.id},
+        name = #{row.name},
+        uploaded_path = #{row.uploadedPath},
+        file_size = #{row.fileSize},
+        uploaded_date = #{row.uploadedDate},
+        user_name = #{row.userName},
+        file_type = #{row.fileType}
     </update>
 
     <delete id="delete" parameterType="java.lang.Long">
