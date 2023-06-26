@@ -43,7 +43,7 @@ public class ToDoController {
     @RequestMapping(value = "/importantStatus", method = RequestMethod.POST)
     public String importantStatus(@RequestParam(value = "id") Integer id,
                                   @RequestParam(value = "currentTab") String currentTab,
-                                  @RequestParam(value = "list_id") Integer list_id) {
+                                  @RequestParam(value = "list_id", required = false) Integer list_id) {
         logger.info("Marking todo important: {}", id);
         toDoService.important(id);
         String target = list_id == null ? currentTab : currentTab + "?id=" + list_id;
@@ -53,7 +53,7 @@ public class ToDoController {
     @RequestMapping(value = "/completedStatus", method = RequestMethod.POST)
     public String completedStatus(@RequestParam(value = "id") Integer id,
                                   @RequestParam(value = "currentTab") String currentTab,
-                                  @RequestParam(value = "list_id") Integer list_id) {
+                                  @RequestParam(value = "list_id", required = false) Integer list_id) {
         logger.info("Completed todo: {}", id);
         toDoService.completed(id);
         String target = list_id == null ? currentTab : currentTab + "?id=" + list_id;

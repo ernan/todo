@@ -47,7 +47,7 @@
                             <form method="post" th:action="@{/completedStatus}"
                                   th:id="'completed_' + ${todo.id}">
                                 <input name="id" th:value="${todo.id}" type="hidden"/>
-                                <input name="list_id" th:value="${list_id}" type="hidden"/>
+                                <input name="list_id" th:value="${list_id != null} ? ${list_id}" type="hidden"/>
                                 <input name="currentTab" th:value="${currentTab}" type="hidden"/>
                                 <div th:if="${todo.completed} == 1">
                                     <img onclick="$(this).closest('form').submit();"
@@ -64,7 +64,7 @@
                                   th:id="'important_' + ${todo.id}">
                                 <input name="id" th:value="${todo.id}" type="hidden"/>
                                 <input name="currentTab" th:value="${currentTab}" type="hidden"/>
-                                <input name="list_id" th:value="${list_id}" type="hidden"/>
+                                <input name="list_id" th:value="${list_id != null} ? ${list_id}" type="hidden"/>
                                 <div th:if="${todo.important} == 1">
                                     <img onclick="$(this).closest('form').submit();"
                                          th:src="@{/images/star-enabled.svg}"/>
