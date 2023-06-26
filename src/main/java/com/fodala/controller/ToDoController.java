@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -40,17 +41,23 @@ public class ToDoController {
     }
 
     @RequestMapping(value = "/importantStatus", method = RequestMethod.POST)
-    public String importantStatus(@RequestParam(value = "id") Integer id, @RequestParam(value = "currentTab") String currentTab) {
+    public String importantStatus(@RequestParam(value = "id") Integer id,
+                                  @RequestParam(value = "currentTab") String currentTab,
+                                  @RequestParam(value = "list_id") Integer list_id) {
         logger.info("Marking todo important: {}", id);
         toDoService.important(id);
-        return "redirect:/" + currentTab;
+        String target = list_id == null ? currentTab : currentTab + "?id=" + list_id;
+        return "redirect:/" + target;
     }
 
     @RequestMapping(value = "/completedStatus", method = RequestMethod.POST)
-    public String completedStatus(@RequestParam(value = "id") Integer id, @RequestParam(value = "currentTab") String currentTab) {
+    public String completedStatus(@RequestParam(value = "id") Integer id,
+                                  @RequestParam(value = "currentTab") String currentTab,
+                                  @RequestParam(value = "list_id") Integer list_id) {
         logger.info("Completed todo: {}", id);
         toDoService.completed(id);
-        return "redirect:/" + currentTab;
+        String target = list_id == null ? currentTab : currentTab + "?id=" + list_id;
+        return "redirect:/" + target;
     }
 
 
@@ -135,7 +142,8 @@ public class ToDoController {
     }
 
     @RequestMapping(value = "/todo", method = RequestMethod.GET)
-    public String todo(@RequestParam(value = "id", required = false) Integer id, Model model) {
+    public String todo(@RequestParam(value = "id", required = false) Integer id,
+                       Model model) {
         ToDo toDo;
         if (id != null) {
             toDo = toDoService.findById(id);
@@ -150,14 +158,24 @@ public class ToDoController {
     }
 
     @RequestMapping(value = "/todo", method = RequestMethod.POST)
-    public ModelAndView save(ToDo toDo, BindingResult bindingResult) {
+    public String save(ToDo toDo,
+                       @RequestParam(value = "currentTab", required = false) String currentTab,
+                       @RequestParam(value = "list_id", required = false) Integer list_id,
+                       BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
             if (toDo.getId() == null) {
                 toDo.setCreated(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                toDo.setImportant(currentTab.equals(Tab.Important.value) ? 1 : 0);
                 toDo.setCompleted(0);
-                toDo.setImportant(0);
+                if (currentTab.equals(Tab.MyDay.value)) {
+                    toDo.setStart(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                }
                 toDo.setStatus("New");
                 toDoService.insert(toDo);
+                int id = toDoService.lastInsert();
+                if (currentTab.equals(Tab.List.value)) {
+                    toDoService.insertListItem(list_id, id);
+                }
                 logger.info("Inserted todo {}", toDo);
             } else {
                 if (toDoService.findById(toDo.getId()) != null) {
@@ -166,12 +184,12 @@ public class ToDoController {
                 }
             }
         }
-        ModelAndView modelAndView = new ModelAndView("todo/edit");
-        modelAndView.addObject("todo", toDo);
-        modelAndView.addObject("title", toDo.getTitle());
-        modelAndView.addObject("currentTab", "home");
-        modelAndView.addObject("history", toDoService.history(toDo.getId()));
-        return modelAndView;
+        model.addAttribute("currentTab", currentTab);
+        model.addAttribute("title", currentTab);
+        model.addAttribute("list_id", list_id);
+        model.addAttribute("todo", new ToDo());
+        String target = list_id == null ? currentTab : currentTab + "?id=" + list_id;
+        return "redirect:/" + target;
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
@@ -197,37 +215,34 @@ public class ToDoController {
         return "index";
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public String list(@RequestParam(value = "list", required = false) String list, Model model, HttpSession session) {
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String list(@RequestParam(value = "id") Integer id, Model model) {
         logger.info("Finding tasks containing text");
-        session.setAttribute("list", list);
-        model.addAttribute("list", list);
-        List<ToDo> toDos = toDoService.list(list);
+        List<ToDo> toDos = toDoService.listItems(id);
+
+        model.addAttribute("list_id", id);
+        model.addAttribute("title", getListName(id));
         addAttributes(model, ListFilter.ALL, Tab.List, toDos);
         return "index";
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String listGet(@RequestParam(value = "list", required = false) String list, Model model, HttpSession session) {
-        logger.info("Finding tasks containing text");
-        if (list == null) {
-            list = (String) session.getAttribute("list");
+    String getListName(Integer id) {
+        List<Map<String, Object>> list = toDoService.listNames();
+        for (Map<String, Object> e : list) {
+            if (e.get("id").equals(id)) {
+                return (String) e.get("name");
+            }
         }
-        model.addAttribute("list", list);
-        model.addAttribute("title", list);
-        List<ToDo> toDos = toDoService.list(list);
-        addAttributes(model, ListFilter.ALL, Tab.List, toDos);
-        return "index";
+        return "missing...";
     }
 
     @RequestMapping(value = "/addList", method = RequestMethod.POST)
-    public String addList(@RequestParam(value = "list") String list, Model model, HttpSession session) {
+    public String addList(@RequestParam(value = "list") String list, Model model) {
         logger.info("Adding list {}", list);
         toDoService.createList(list);
         model.addAttribute("list", list);
         model.addAttribute("title", list);
-        List<ToDo> toDos = toDoService.list(list);
-        addAttributes(model, ListFilter.ALL, Tab.List, toDos);
+        addAttributes(model, ListFilter.ALL, Tab.List, Collections.emptyList());
         return "index";
     }
 

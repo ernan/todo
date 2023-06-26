@@ -50,7 +50,6 @@
     </select>
 
     <select id="search" resultType="ToDo">
-        <!--        <bind name="pattern" value="'%' + _parameter.getSearch() + '%'" />-->
         select
         <include refid="Base_Column_List"/>
         from todo
@@ -58,15 +57,16 @@
     </select>
 
     <insert id="insert">
-        insert into todo (`title`, `status`, `description`, `completed`, `start`, `end`, `schedule`, `important`,
-        `created`)
-        values (#{toDo.title}, #{toDo.status}, #{toDo.description}, #{toDo.completed}, #{toDo.start}, #{toDo.end},
-        #{toDo.schedule},
-        #{toDo.important}, #{toDo.created})
-        <selectKey keyProperty="id" resultType="int">
-            select last_insert_rowid() as id
-        </selectKey>
+        insert into todo
+        (`title`, `status`, `description`, `completed`, `start`, `end`, `schedule`, `important`, `created`)
+        values
+        (#{toDo.title}, #{toDo.status}, #{toDo.description}, #{toDo.completed}, #{toDo.start}, #{toDo.end},
+        #{toDo.schedule}, #{toDo.important}, #{toDo.created});
     </insert>
+
+    <select id="lastInsert" resultType="int">
+        SELECT MAX(id) as id from todo
+    </select>
 
     <update id="important">
         update todo
@@ -161,4 +161,10 @@
     <select id="createList" resultType="string">
         insert into list(name) VALUES (#{list});
     </select>
+
+    <select id="insertListItem">
+        insert into list_item(list_id, todo_id)
+        VALUES (#{listId}, #{toDoId});
+    </select>
+
 </mapper>

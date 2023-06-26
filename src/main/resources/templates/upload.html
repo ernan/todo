@@ -36,15 +36,10 @@
                     <td>[[${file}]]</td>
                     <td><a th:href="@{${file}}">Download</a></td>
                     <td>
-                        <!--                        <a th:href="@{'/files/delete/' + ${file.name}}" th:fileName="${file.name}" id="btnDelete"-->
-                        <!--                           title="Delete this file" class="fa-regular fa-trash-can icon-dark btn-delete"></a>-->
-
                         <a id="btnDelete" th:fileName="${file}" th:href="@{'/files/delete/' + ${file}}"
                            title="Delete this file">
                             <img th:src="@{/images/trash.svg}"/>
                         </a>
-
-
                     </td>
                 </tr>
                 </tbody>

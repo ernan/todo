@@ -28,7 +28,6 @@
 
 
 
-
     </style>
 </head>
 <body>
@@ -223,15 +222,12 @@
 
             <table>
                 <tr th:each="listName: ${listNames}">
-                    <form method="post" th:action="@{/list}" th:id="'list_' + ${listName.id}">
-                        <input name="list" th:value="${listName.name}" type="hidden"/>
-                        <input name="id" th:value="${listName.id}" type="hidden"/>
-                        <td><img onclick="$(this).closest('form').submit();" th:src="@{/images/list.svg}"/></td>
-                        <td>
-                            <button class="btn btn-link active" th:text="${listName.name}" type="submit">
-                            </button>
-                        </td>
-                    </form>
+                    <td>
+                        <a th:href="@{list(id=${listName.id})}">
+                            <img th:src="@{/images/list.svg}"/>
+                            <button class="btn btn-link active" th:text="${listName.name}"></button>
+                        </a>
+                    </td>
                 </tr>
             </table>
             <hr/>
@@ -249,7 +245,6 @@
             </form>
         </div>
     </div>
-</div>
 </div>
 
 <footer class="page-footer font-small blue" id="bottom">

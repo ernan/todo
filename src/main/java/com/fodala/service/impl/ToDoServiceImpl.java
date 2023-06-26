@@ -4,9 +4,12 @@ import com.fodala.mapper.ToDoMapper;
 import com.fodala.pojo.ToDo;
 import com.fodala.pojo.ToDoHistory;
 import com.fodala.service.ToDoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,7 +17,12 @@ import java.util.Map;
 
 @Service
 public class ToDoServiceImpl implements ToDoService {
+    private static final Logger logger = LoggerFactory.getLogger(ToDoServiceImpl.class);
+
     final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    @Autowired
+    DataSource dataSource;
 
     @Autowired
     ToDoMapper mapper;
@@ -108,5 +116,15 @@ public class ToDoServiceImpl implements ToDoService {
     @Override
     public List<ToDo> listItems(Integer id) {
         return mapper.listItems(id);
+    }
+
+    @Override
+    public void insertListItem(Integer toDoId, Integer listId) {
+        mapper.insertListItem(toDoId, listId);
+    }
+
+    @Override
+    public Integer lastInsert() {
+        return mapper.lastInsert();
     }
 }

@@ -44,4 +44,7 @@ public interface ToDoService {
 
     List<ToDo> listItems(Integer id);
 
+    void insertListItem(Integer listId, Integer toDoId);
+
+    Integer lastInsert();
 }

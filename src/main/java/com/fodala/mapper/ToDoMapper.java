@@ -43,4 +43,8 @@ public interface ToDoMapper {
     List<ToDo> list(String name);
 
     void createList(@Param("list") String list);
+
+    void insertListItem(@Param("listId") Integer listId, @Param("toDoId") Integer toDoId);
+
+    Integer lastInsert();
 }
