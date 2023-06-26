@@ -34,10 +34,13 @@ public class ToDoController {
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String delete(@RequestParam(value = "id") Integer id, @RequestParam(value = "currentTab") String currentTab) {
+    public String delete(@RequestParam(value = "id") Integer id,
+                         @RequestParam(value = "currentTab") String currentTab,
+                         @RequestParam(value = "list_id", required = false) Integer list_id) {
         logger.info("Deleting todo: {}", id);
         toDoService.delete(id);
-        return "redirect:/" + currentTab;
+        String target = list_id == null ? currentTab : currentTab + "?id=" + list_id;
+        return "redirect:/" + target;
     }
 
     @RequestMapping(value = "/importantStatus", method = RequestMethod.POST)
@@ -74,6 +77,13 @@ public class ToDoController {
         return "index";
     }
 
+    @GetMapping("/calendar")
+    public String calendar(Model model) {
+        addAttributes(model, ListFilter.COMPLETED, Tab.Calendar,
+                toDoService.filter(Collections.singletonMap("completed", 1)));
+        return "calendar/index";
+    }
+
     @GetMapping("/completed")
     public String indexCompleted(Model model) {
         addAttributes(model, ListFilter.COMPLETED, Tab.Tasks,
@@ -85,7 +95,8 @@ public class ToDoController {
         model.addAttribute("todo", toDoService.createEmpty());
         model.addAttribute("filter", listFilter);
         model.addAttribute("todos", todos);
-        model.addAttribute("currentTab", tab.toString());
+        model.addAttribute("title", tab.title);
+        model.addAttribute("currentTab", tab.value);
         model.addAttribute("totalNumberOfItems", todos.size());
         model.addAttribute("count", toDoService.count());
         model.addAttribute("listNames", toDoService.listNames());
@@ -219,10 +230,9 @@ public class ToDoController {
     public String list(@RequestParam(value = "id") Integer id, Model model) {
         logger.info("Finding tasks containing text");
         List<ToDo> toDos = toDoService.listItems(id);
-
+        addAttributes(model, ListFilter.ALL, Tab.List, toDos);
         model.addAttribute("list_id", id);
         model.addAttribute("title", getListName(id));
-        addAttributes(model, ListFilter.ALL, Tab.List, toDos);
         return "index";
     }
 
@@ -253,16 +263,20 @@ public class ToDoController {
     }
 
     enum Tab {
-        MyDay("myday"),
-        Planned("planned"),
-        Important("important"),
-        Tasks("tasks"),
-        List("list"),
-        Search("search");
+        Calendar("calendar", "Calendar"),
+        Important("important", "Important"),
+        List("list", "List"),
+        MyDay("myday", "My Day " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE d MMM uuuu"))),
+        Planned("planned", "Planned"),
+        Search("search", "Search"),
+        Tasks("tasks", "Tasks");
         final String value;
 
-        Tab(String value) {
+        final String title;
+
+        Tab(String value, String title) {
             this.value = value;
+            this.title = title;
         }
 
         public String toString() {

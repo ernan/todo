@@ -84,6 +84,7 @@
                             <form method="post" th:action="@{/delete}" th:id="'delete_' + ${todo.id}">
                                 <input name="id" th:value="${todo.id}" type="hidden"/>
                                 <input name="currentTab" th:value="${currentTab}" type="hidden"/>
+                                <input name="list_id" th:value="${list_id != null} ? ${list_id}" type="hidden"/>
                                 <img onclick="$(this).closest('form').submit();"
                                      th:src="@{/images/trash.svg}"/>
                             </form>
