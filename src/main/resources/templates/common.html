@@ -156,68 +156,6 @@
                 </a>
             </nav>
             <hr/>
-            <!--            <div class="list-group mb-3">-->
-            <!--                <table data-click-to-select="true" data-pagination="true" id="listTable">-->
-            <!--                    <thead>-->
-            <!--                    <tr>-->
-            <!--                        <th data-events="operateEvents"-->
-            <!--                            data-field="operate"-->
-            <!--                            data-formatter="operateFormatter">Ix-->
-            <!--                        </th>-->
-            <!--                        <th data-field="name">Name</th>-->
-            <!--                    </tr>-->
-            <!--                    </thead>-->
-            <!--                </table>-->
-            <!--                <script>-->
-            <!--        var $table = $('#listTable')-->
-            <!--        $(function () {-->
-            <!--            var url = $("#listNames").val();-->
-            <!--            $.get(url).then(function (res) {-->
-            <!--                $table.bootstrapTable({-->
-            <!--                    data: res,-->
-            <!--                    showHeader: false-->
-            <!--                })-->
-            <!--            });-->
-            <!--        })-->
-
-            <!--        function operateFormatter(value, row, index) {-->
-            <!--            return [-->
-            <!--                '<a class="list" href="javascript:void(0)" title="List">',-->
-            <!--                '<svg xmlns="http://www.w3.org/2000/svg" ' +-->
-            <!--                '          width="24"' +-->
-            <!--                '          height="24"' +-->
-            <!--                '          viewBox="0 0 24 24"' +-->
-            <!--                '          fill="none"' +-->
-            <!--                '          stroke="currentColor"' +-->
-            <!--                '          stroke-width="2"' +-->
-            <!--                '          stroke-linecap="round"' +-->
-            <!--                '          stroke-linejoin="round">' +-->
-            <!--                '      <line x1="8" y1="6" x2="21" y2="6"/>' +-->
-            <!--                '      <line x1="8" y1="12" x2="21" y2="12"/>' +-->
-            <!--                '      <line x1="8" y1="18" x2="21" y2="18"/>' +-->
-            <!--                '      <line x1="3" y1="6" x2="3.01" y2="6"/>' +-->
-            <!--                '     <line x1="3" y1="12" x2="3.01" y2="12"/>' +-->
-            <!--                '      <line x1="3" y1="18" x2="3.01" y2="18"/>' +-->
-            <!--                '  </svg>',-->
-            <!--                '</a>'-->
-            <!--            ].join('')-->
-            <!--        }-->
-
-            <!--        window.operateEvents = {-->
-            <!--          'click.row': function (e, value, row, index) {-->
-            <!--             alert('You click list action, row: ' + JSON.stringify(row))-->
-            <!--          }-->
-            <!--       }-->
-
-            <!--       window.nameEvents = {-->
-            <!--          'click.row': function (e, value, row, index) {-->
-            <!--             alert('You click name action, row: ' + JSON.stringify(row))-->
-            <!--          }-->
-            <!--       }-->
-
-
-            <!--                </script>-->
-
             <table>
                 <tr th:each="listName: ${listNames}">
                     <td>

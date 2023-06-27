@@ -9,15 +9,15 @@
     </sql>
 
     <select id="all" resultType="ToDo">
-        select
+        SELECT
         <include refid="Base_Column_List"/>
-        from todo
+        FROM todo
     </select>
 
     <select id="filter" parameterType="map" resultType="ToDo">
-        select
+        SELECT
         <include refid="Base_Column_List"/>
-        from todo
+        FROM todo
         <where>
             1 = 1
             <if test=" map.important != null ">
@@ -36,53 +36,54 @@
     </select>
 
     <select id="findById" resultType="ToDo">
-        select
+        SELECT
         <include refid="Base_Column_List"/>
-        from todo
-        where `id` = #{id}
+        FROM todo
+        WHERE `id` = #{id}
     </select>
 
     <select id="findByDate" resultType="ToDo">
-        select
+        SELECT
         <include refid="Base_Column_List"/>
-        from todo
-        where `start` BETWEEN #{start} AND #{end}
+        FROM todo
+        WHERE `start` BETWEEN #{start} AND #{end}
     </select>
 
     <select id="search" resultType="ToDo">
-        select
+        SELECT
         <include refid="Base_Column_List"/>
-        from todo
-        where `title` like #{search}
+        FROM todo
+        WHERE `title` like #{search}
     </select>
 
     <insert id="insert">
-        insert into todo
+        INSERT INTO todo
         (`title`, `status`, `description`, `completed`, `start`, `end`, `schedule`, `important`, `created`)
-        values
+        VALUES
         (#{toDo.title}, #{toDo.status}, #{toDo.description}, #{toDo.completed}, #{toDo.start}, #{toDo.end},
         #{toDo.schedule}, #{toDo.important}, #{toDo.created});
+        RETURNING id;
     </insert>
 
     <select id="lastInsert" resultType="int">
-        SELECT MAX(id) as id from todo
+        SELECT MAX(id) as id FROM todo
     </select>
 
     <update id="important">
-        update todo
-        set `important` = (1 - `important`)
-        where `id` = #{id}
+        UPDATE todo
+        SET `important` = (1 - `important`)
+        WHERE `id` = #{id}
     </update>
 
     <update id="completed">
-        update todo
-        set `completed` = (1 - `completed`),
+        UPDATE todo
+        SET `completed` = (1 - `completed`),
         `end` = IIF(1 - `completed`, strftime('%Y-%m-%dT%H:%M:%S','now'), '')
-        where `id` = #{id}
+        WHERE `id` = #{id}
     </update>
 
     <update id="update">
-        update todo set
+        UPDATE todo SET
         `title` = #{toDo.title}
         <if test="toDo.status != null">
             , `status` = #{toDo.status}
@@ -105,65 +106,65 @@
         <if test="toDo.important != null">
             , `important` = #{toDo.important}
         </if>
-        where `id` = #{toDo.id}
+        WHERE `id` = #{toDo.id}
     </update>
 
     <delete id="delete">
-        delete
-        from todo
-        where `id` = #{id}
+        DELETE
+        FROM todo
+        WHERE `id` = #{id}
     </delete>
 
     <select id="history" resultType="ToDoHistory">
-        select `id`, `todo_id`, `title`, `status`, `description`, `completed`,
+        SELECT `id`, `todo_id`, `title`, `status`, `description`, `completed`,
         `start`, `end`, `schedule`, `important`, `created`, `updated`
-        from todo_history
-        where `todo_id` = #{id}
-        order by `updated` desc
+        FROM todo_history
+        WHERE `todo_id` = #{id}
+        ORDER BY `updated` DESC
     </select>
 
     <select id="count" resultType="map">
-        select (select count(*) from todo) as tasks,
-        (select count(*) from todo where important = 1) as important,
-        (select count(*) from todo where completed = 1) as completed,
-        (select count(*) from todo where start BETWEEN strftime('%Y-%m-%d','now') AND strftime('%Y-%m-%d', 'now', '+1
+        SELECT (SELECT count(*) FROM todo) as tasks,
+        (SELECT count(*) FROM todo WHERE important = 1) AS important,
+        (SELECT count(*) FROM todo WHERE completed = 1) AS completed,
+        (SELECT count(*) FROM todo WHERE start BETWEEN strftime('%Y-%m-%d','now') AND strftime('%Y-%m-%d', 'now', '+1
         day')) as myday,
-        (select count(*) from todo where start BETWEEN strftime('%Y-%m-%d','now') AND strftime('%Y-%m-%d', 'now', '+100
+        (select count(*) FROM todo WHERE start BETWEEN strftime('%Y-%m-%d','now') AND strftime('%Y-%m-%d', 'now', '+100
         year')) as planned
     </select>
 
     <select id="notifications" resultType="map">
-        select * from todo_history order by updated desc
+        SELECT * FROM todo_history ORDER BY updated DESC
     </select>
 
     <select id="listNames" resultType="map">
-        select id, name from list order by created desc
+        SELECT id, name FROM list ORDER BY created DESC
     </select>
 
     <select id="listItems" resultType="ToDo">
-        select
+        SELECT
         <include refid="Base_Column_List"/>
-        from todo
-        where id in
-        (select todo_id from list_item where
-        list_id in (select id from list where `id` = #{id}))
+        FROM todo
+        WHERE id IN
+        (SELECT todo_id FROM list_item WHERE
+        list_id IN (SELECT id FROM list WHERE `id` = #{id}))
     </select>
 
     <select id="list" resultType="ToDo">
-        select
+        SELECT
         <include refid="Base_Column_List"/>
-        from todo
-        where id in
-        (select todo_id from list_item where
-        list_id in (select id from list where name = #{name}))
+        FROM todo
+        WHERE id IN
+        (SELECT todo_id FROM list_item WHERE
+        list_id IN (SELECT id FROM list WHERE name = #{name}))
     </select>
 
     <select id="createList" resultType="string">
-        insert into list(name) VALUES (#{list});
+        INSERT INTO list(name) VALUES (#{list});
     </select>
 
     <select id="insertListItem">
-        insert into list_item(list_id, todo_id)
+        INSERT INTO list_item(list_id, todo_id)
         VALUES (#{listId}, #{toDoId});
     </select>
 
