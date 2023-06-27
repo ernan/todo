@@ -22,6 +22,8 @@ insert into setting(section, name, value) VALUES ('default', 'Theme', 'Light');
 insert into setting(section, name, value) VALUES ('default', 'View Completed', 'False');
 insert into setting(section, name, value) VALUES ('ui', 'selectedColor', 'blue');
 insert into setting(section, name, value) VALUES ('ui', 'completedColor', 'grey');
+insert into setting(section, name, value) VALUES ('ui', 'Max ToDo Items', '10');
+insert into setting(section, name, value) VALUES ('ui', 'Max List Items', '5');
 
 insert into list(name) VALUES ('Goals 2023');
 insert into list(name) VALUES ('Goals 2022');

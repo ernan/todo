@@ -28,7 +28,7 @@
                 </div>
             </form>
             <div class="card">
-                <div th:replace="~{common::#statusbar}"></div>
+                <div  class="float-right" th:replace="~{common::#statusbar}"></div>
                 <table class="table table-hover table-striped">
                     <thead>
                     <tr>
@@ -94,6 +94,7 @@
                     </tbody>
                 </table>
             </div>
+            <div th:replace="~{common::#pagination}"></div>
         </div>
     </div>
     <div th:replace="~{common::#bottom}"></div>

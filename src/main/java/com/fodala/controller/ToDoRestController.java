@@ -38,6 +38,12 @@ public class ToDoRestController {
         return toDoService.notifications();
     }
 
+    @GetMapping("/todo")
+    public List<ToDo> toDos(){
+        return toDoService.all();
+    }
+
+
     @PatchMapping("/todo/{id}")
     public ResponseEntity<ToDo> setCompleted(@PathVariable Integer id) {
         ToDo result = toDoService.findById(id);
