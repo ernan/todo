@@ -8,9 +8,9 @@ import com.fodala.pojo.ToDo;
 import java.io.IOException;
 
 public class ToDoSerializer extends StdSerializer<ToDo> {
-	private static final long serialVersionUID = -725452707948867695L;
+    private static final long serialVersionUID = -725452707948867695L;
 
-	public ToDoSerializer(Class<ToDo> t) {
+    public ToDoSerializer(Class<ToDo> t) {
         super(t);
     }
 
