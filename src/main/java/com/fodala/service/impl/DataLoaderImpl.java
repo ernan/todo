@@ -29,11 +29,10 @@ public class DataLoaderImpl implements DataLoader {
 
     @Override
     public void loadData(String resourceFile) {
-        try (Connection connection = ds.getConnection()) {
+        try (Connection connection = ds.getConnection(); Statement statement = connection.createStatement()) {
             String sql = loadResource(resourceFile);
-            Statement statement = connection.createStatement();
             logger.trace("Executing \n{}\n", sql);
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+            statement.setQueryTimeout(30);  // set timeout to 30 seconds.
             logger.info("Completed loading {}.", resourceFile);
             statement.executeUpdate(sql);
             logger.info("Completed executing {}.", resourceFile);

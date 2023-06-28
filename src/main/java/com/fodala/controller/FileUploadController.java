@@ -18,7 +18,6 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,10 +64,10 @@ public class FileUploadController {
         return ResponseEntity.notFound().build();
     }
 
-    @RequestMapping("/files")
+    @GetMapping("/files")
     public String uploads(Model model) {
         List<UploadedFile> settings = uploadedFileMapper.all();
-        logger.info("Files: {}", Arrays.toString(settings.toArray()));
+        logger.info("Files: {}", settings.toArray());
         model.addAttribute("files", settings);
         return "upload";
     }

@@ -14,9 +14,9 @@ public interface SettingsMapper {
 
     Setting findById(@Param("id") Integer id);
 
-    void insert(@Param("setting") Setting Setting);
+    void insert(@Param("setting") Setting setting);
 
-    void update(@Param("setting") Setting Setting);
+    void update(@Param("setting") Setting setting);
 
     void delete(@Param("id") Integer id);
 

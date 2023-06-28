@@ -33,17 +33,17 @@ public class ToDoController {
         return Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @PostMapping("/delete")
     public String delete(@RequestParam(value = "id") Integer id,
                          @RequestParam(value = "currentTab") String currentTab,
-                         @RequestParam(value = "list_id", required = false) Integer list_id) {
+                         @RequestParam(value = "list_id", required = false) Integer listId) {
         logger.info("Deleting todo: {}", id);
         toDoService.delete(id);
-        String target = list_id == null ? currentTab : currentTab + "?id=" + list_id;
+        String target = listId == null ? currentTab : currentTab + "?id=" + listId;
         return "redirect:/" + target;
     }
 
-    @RequestMapping(value = "/importantStatus", method = RequestMethod.POST)
+    @PostMapping("/importantStatus")
     public String importantStatus(@RequestParam(value = "id") Integer id,
                                   @RequestParam(value = "currentTab") String currentTab,
                                   @RequestParam(value = "list_id", required = false) Integer list_id) {
@@ -53,7 +53,7 @@ public class ToDoController {
         return "redirect:/" + target;
     }
 
-    @RequestMapping(value = "/completedStatus", method = RequestMethod.POST)
+    @PostMapping("/completedStatus")
     public String completedStatus(@RequestParam(value = "id") Integer id,
                                   @RequestParam(value = "currentTab") String currentTab,
                                   @RequestParam(value = "list_id", required = false) Integer list_id) {
@@ -63,7 +63,7 @@ public class ToDoController {
         return "redirect:/" + target;
     }
 
-    @RequestMapping(value = "/back", method = RequestMethod.GET)
+    @GetMapping("/back")
     public ModelAndView back(HttpServletRequest request) {
         String referer = getPreviousPageByRequest(request).orElse("/");
         return new ModelAndView("redirect:" + referer);
@@ -71,20 +71,20 @@ public class ToDoController {
 
     @GetMapping("/active")
     public String indexActive(Model model) {
-        addAttributes(model, Filter.ACTIVE, Tab.Tasks,
+        addAttributes(model, Filter.ACTIVE, Tab.TASKS,
                 toDoService.filter(Collections.singletonMap("completed", 0)));
         return "index";
     }
 
     @GetMapping("/calendar")
     public String calendar(Model model) {
-        addAttributes(model, Filter.COMPLETED, Tab.Calendar, toDoService.all());
+        addAttributes(model, Filter.COMPLETED, Tab.CALENDAR, toDoService.all());
         return "calendar";
     }
 
     @GetMapping("/completed")
     public String indexCompleted(Model model) {
-        addAttributes(model, Filter.COMPLETED, Tab.Tasks,
+        addAttributes(model, Filter.COMPLETED, Tab.TASKS,
                 toDoService.filter(Collections.singletonMap("completed", 1)));
         return "index";
     }
@@ -106,43 +106,43 @@ public class ToDoController {
         return new ToDoValidationError(exception.getMessage());
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping("/")
     public String home(Model model) {
         logger.info("Getting all todos");
-        addAttributes(model, Filter.ALL, Tab.Tasks, toDoService.all());
+        addAttributes(model, Filter.ALL, Tab.TASKS, toDoService.all());
         return "index";
     }
 
-    @RequestMapping(value = "/tasks", method = RequestMethod.GET)
+    @GetMapping("/tasks")
     public String tasks(Model model) {
         logger.info("Getting all tasks");
-        addAttributes(model, Filter.ALL, Tab.Tasks, toDoService.all());
+        addAttributes(model, Filter.ALL, Tab.TASKS, toDoService.all());
         return "index";
     }
 
-    @RequestMapping(value = "/planned", method = RequestMethod.GET)
+    @GetMapping("/planned")
     public String planned(Model model) {
         logger.info("Getting all planned todos");
         model.addAttribute("title", "Planned");
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusYears(100L);
-        addAttributes(model, Filter.ALL, Tab.Planned, toDoService.findByDate(start, end));
+        addAttributes(model, Filter.ALL, Tab.PLANNED, toDoService.findByDate(start, end));
         return "index";
     }
 
-    @RequestMapping(value = "/important", method = RequestMethod.GET)
+    @GetMapping("/important")
     public String important(Model model) {
         logger.info("Getting all important todos");
-        addAttributes(model, Filter.ALL, Tab.Important, toDoService.filter(Collections.singletonMap("important", 1)));
+        addAttributes(model, Filter.ALL, Tab.IMPORTANT, toDoService.filter(Collections.singletonMap("important", 1)));
         return "index";
     }
 
-    @RequestMapping(value = "/myday", method = RequestMethod.GET)
+    @GetMapping("/myday")
     public String myDay(Model model) {
         logger.info("Getting My Day todos");
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusDays(1L);
-        addAttributes(model, Filter.ALL, Tab.MyDay, toDoService.findByDate(start, end));
+        addAttributes(model, Filter.ALL, Tab.MY_DAY, toDoService.findByDate(start, end));
         return "index";
     }
 
@@ -159,10 +159,10 @@ public class ToDoController {
         model.addAttribute("currentTab", "tasks");
         model.addAttribute("title", toDo.getTitle());
         model.addAttribute("todo", toDo);
-        return "todo/edit";
+        return "edit";
     }
 
-    @RequestMapping(value = "/todo", method = RequestMethod.POST)
+    @PostMapping("/todo")
     public String save(ToDo toDo,
                        @RequestParam(value = "currentTab", required = false) String currentTab,
                        @RequestParam(value = "list_id", required = false) Integer list_id,
@@ -170,14 +170,14 @@ public class ToDoController {
         if (!bindingResult.hasErrors()) {
             if (toDo.getId() == null) {
                 toDo.setCreated(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                toDo.setImportant(currentTab.equals(Tab.Important.value) ? 1 : 0);
+                toDo.setImportant(currentTab.equals(Tab.IMPORTANT.value) ? 1 : 0);
                 toDo.setCompleted(0);
-                if (currentTab.equals(Tab.MyDay.value)) {
+                if (currentTab.equals(Tab.MY_DAY.value)) {
                     toDo.setStart(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 }
                 toDo.setStatus("New");
                 int id = toDoService.insert(toDo);
-                if (currentTab.equals(Tab.List.value)) {
+                if (currentTab.equals(Tab.LIST.value)) {
                     toDoService.insertListItem(list_id, id);
                 }
                 logger.info("Inserted todo {}", toDo);
@@ -196,35 +196,35 @@ public class ToDoController {
         return "redirect:/" + target;
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @PostMapping("/search")
     public String search(@RequestParam(value = "search", required = false) String search, Model model, HttpSession session) {
         logger.info("Finding tasks containing text");
         model.addAttribute("search", search);
         session.setAttribute("search", search);
         List<ToDo> toDos = toDoService.search("%" + search + "%");
         model.addAttribute("title", "Find: " + search);
-        addAttributes(model, Filter.ALL, Tab.Search, toDos);
+        addAttributes(model, Filter.ALL, Tab.SEARCH, toDos);
         return "index";
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    @GetMapping("/search")
     public String searchGet(@RequestParam(value = "search", required = false) String search, Model model, HttpSession session) {
-        logger.info("Finding tasks containing text");
+        logger.info("Getting tasks containing text {}", search);
         if (search == null) {
             search = (String) session.getAttribute("search");
         }
         model.addAttribute("search", search);
         List<ToDo> toDos = toDoService.search("%" + search + "%");
-        addAttributes(model, Filter.ALL, Tab.Search, toDos);
+        addAttributes(model, Filter.ALL, Tab.SEARCH, toDos);
         model.addAttribute("title", "Searching for " + search);
         return "index";
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping("/list")
     public String list(@RequestParam(value = "id") Integer id, Model model) {
-        logger.info("Finding tasks containing text");
+        logger.info("Finding tasks for list {}", id);
         List<ToDo> toDos = toDoService.listItems(id);
-        addAttributes(model, Filter.ALL, Tab.List, toDos);
+        addAttributes(model, Filter.ALL, Tab.LIST, toDos);
         model.addAttribute("list_id", id);
         model.addAttribute("title", getListName(id));
         return "index";
@@ -240,20 +240,20 @@ public class ToDoController {
         return "missing...";
     }
 
-    @RequestMapping(value = "/addList", method = RequestMethod.POST)
+    @PostMapping("/addList")
     public String addList(@RequestParam(value = "list") String list, Model model) {
         logger.info("Adding list {}", list);
         toDoService.createList(list);
         model.addAttribute("list", list);
         model.addAttribute("title", list);
-        addAttributes(model, Filter.ALL, Tab.List, Collections.emptyList());
+        addAttributes(model, Filter.ALL, Tab.LIST, Collections.emptyList());
         return "index";
     }
 
-    @RequestMapping(value = "/notifications", method = RequestMethod.GET)
+    @GetMapping("/notifications")
     public String notifications(Model model) {
         logger.info("Getting notifications");
-        addAttributes(model, Filter.ALL, Tab.Notifications, Collections.emptyList());
+        addAttributes(model, Filter.ALL, Tab.NOTIFICATIONS, Collections.emptyList());
         return "notifications";
     }
 
@@ -275,14 +275,14 @@ public class ToDoController {
     }
 
     enum Tab {
-        Calendar("calendar", "Calendar"),
-        Important("important", "Important"),
-        List("list", "List"),
-        MyDay("myday", "My Day " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE d MMM uuuu"))),
-        Notifications("notifications", "Notifications"),
-        Planned("planned", "Planned"),
-        Search("search", "Search"),
-        Tasks("tasks", "Tasks");
+        CALENDAR("calendar", "Calendar"),
+        IMPORTANT("important", "Important"),
+        LIST("list", "List"),
+        MY_DAY("myday", "My Day " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE d MMM uuuu"))),
+        NOTIFICATIONS("notifications", "Notifications"),
+        PLANNED("planned", "Planned"),
+        SEARCH("search", "Search"),
+        TASKS("tasks", "Tasks");
         final String value;
 
         final String title;

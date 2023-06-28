@@ -6,19 +6,22 @@
     <br/>
     <h1 th:value="*{todo.title}">Edit Todo...</h1>
     <br/>
-    <form class="form-horizontal" id="todo-form" method="post" th:action="@{/todo}" th:object="${todo}">
-        <input name="id" th:value="*{id}" type="hidden"/>
+    <form class="form-horizontal" id="todo-form" method="post" th:action="@{/todo}">
+        <input name="id" th:value="*{todo.id}" type="hidden"/>
+        <input name="currentTab" th:value="*{currentTab}" type="hidden"/>
+        <input name="list_id" th:value="*{list_id}" type="hidden"/>
+
         <div class="form-group">
             <label class="col-sm-2 control-label" for="title">Title</label>
             <div class="col-sm-10">
-                <input class="form-control" id="title" name="title" placeholder="title" th:value="*{title}"
+                <input class="form-control" id="title" name="title" placeholder="title" th:value="*{todo.title}"
                        type="text"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label" for="status">Status</label>
             <div class="col-sm-10">
-                <input class="form-control" id="status" name="status" placeholder="name" th:value="*{status}"
+                <input class="form-control" id="status" name="status" placeholder="name" th:value="*{todo.status}"
                        type="text"/>
             </div>
         </div>
@@ -26,27 +29,27 @@
             <label class="col-sm-2 control-label" for="description">Description</label>
             <div class="col-sm-10">
                 <input class="form-control" id="description" name="description" placeholder="description"
-                       th:value="*{description}" type="text"/>
+                       th:value="*{todo.description}" type="text"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label" for="completed">Completed</label>
             <div class="col-sm-10">
                 <input class="form-control" id="completed" name="completed" placeholder="0"
-                       th:value="*{completed}" type="text"/>
+                       th:value="*{todo.completed}" type="text"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label" for="start">Start</label>
             <div class="col-sm-10">
-                <input class="form-control" id="start" name="start" placeholder="2024-12-12" th:value="*{start}"
+                <input class="form-control" id="start" name="start" placeholder="2024-12-12" th:value="*{todo.start}"
                        type="text"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label" for="start">End</label>
             <div class="col-sm-10">
-                <input class="form-control" id="end" name="end" placeholder="2024-12-12" th:value="*{end}"
+                <input class="form-control" id="end" name="end" placeholder="2024-12-12" th:value="*{todo.end}"
                        type="text"/>
             </div>
         </div>
@@ -54,14 +57,14 @@
             <label class="col-sm-2 control-label" for="schedule">Schedule</label>
             <div class="col-sm-10">
                 <input class="form-control" id="schedule" name="schedule" placeholder="schedule"
-                       th:value="*{schedule}" type="text"/>
+                       th:value="*{todo.schedule}" type="text"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label" for="important">Important</label>
             <div class="col-sm-10">
                 <input class="form-control" id="important" name="important" placeholder="important"
-                       th:value="*{important}" type="text"/>
+                       th:value="*{todo.important}" type="text"/>
             </div>
         </div>
         <hr/>
@@ -69,7 +72,7 @@
             <label class="col-sm-2 control-label" for="created">Created</label>
             <div class="col-sm-10">
                 <input class="form-control" id="created" name="created" placeholder="created" readonly
-                       th:value="*{created}" type="text"/>
+                       th:value="*{todo.created}" type="text"/>
             </div>
         </div>
         <br/>

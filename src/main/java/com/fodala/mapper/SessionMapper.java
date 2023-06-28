@@ -14,9 +14,9 @@ public interface SessionMapper {
 
     Session findById(@Param("id") Integer id);
 
-    void insert(@Param("session") Session Session);
+    void insert(@Param("session") Session session);
 
-    void update(@Param("session") Session Session);
+    void update(@Param("session") Session session);
 
     void delete(@Param("id") Integer id);
 

@@ -39,7 +39,7 @@ public class ToDoRestController {
     }
 
     @GetMapping("/todo")
-    public List<ToDo> toDos(){
+    public List<ToDo> toDos() {
         return toDoService.all();
     }
 
@@ -51,28 +51,30 @@ public class ToDoRestController {
         toDoService.update(result);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .buildAndExpand(result.getId()).toUri();
-        return ResponseEntity.ok().header("Location",location.toString()).
+        return ResponseEntity.ok().header("Location", location.toString()).
                 build();
     }
 
-    @RequestMapping(value="/todo", method = {
+    @RequestMapping(value = "/todo", method = {
             RequestMethod.POST,
             RequestMethod.PUT})
     public ResponseEntity<?> createToDo(@Valid @RequestBody ToDo toDo,
-                                        Errors errors){
+                                        Errors errors) {
         Integer id = toDoService.insert(toDo);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().
                 path("/{id}")
                 .buildAndExpand(id).toUri();
         return ResponseEntity.created(location).build();
     }
+
     @DeleteMapping("/todo/{id}")
-    public ResponseEntity<ToDo> deleteToDo(@PathVariable Integer id){
+    public ResponseEntity<ToDo> deleteToDo(@PathVariable Integer id) {
         toDoService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
     @DeleteMapping("/todo")
-    public ResponseEntity<ToDo> deleteToDo(@RequestBody ToDo toDo){
+    public ResponseEntity<ToDo> deleteToDo(@RequestBody ToDo toDo) {
         toDoService.delete(toDo.getId());
         return ResponseEntity.noContent().build();
     }

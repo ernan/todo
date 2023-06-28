@@ -16,15 +16,16 @@
             </div>
         </div>
     </div>
-    <input id="todos" th:value="@{/api/todos}" type="hidden"/>
+    <input id="todo" th:value="@{/api/todo}" type="hidden"/>
 </div>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 <script>
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
+            console.log('Creating calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: $("#todos").val(),
+                events: $("#todo").val(),
                 eventClick: function(info) {
                     console.log('Event: ' + info.event.title);
                     console.log('Event Id: ' + info.event.id);
@@ -32,6 +33,7 @@
                     editToDo(info.event.id);
                 }
             });
+            console.log('Calendar created');
             calendar.render();
         });
 
@@ -40,8 +42,6 @@
                 window.location.href = window.location.href.replace('calendar', 'todo?id=' + id);
             }
         }
-
-
 </script>
 </body>
 
