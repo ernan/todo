@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +27,7 @@ public class SettingsController {
     @Autowired
     private ToDoService toDoService;
 
-    @RequestMapping(value = "/setting", method = RequestMethod.GET)
+    @GetMapping("/setting")
     public String setting(@RequestParam(value = "id", required = false) Integer id, Model model) {
         Setting setting;
         if (id != null) {
@@ -38,7 +40,7 @@ public class SettingsController {
         return "setting/edit";
     }
 
-    @RequestMapping(value = "/setting/delete", method = RequestMethod.GET)
+    @GetMapping("/setting/delete")
     public ModelAndView delete(@RequestParam(value = "id", required = false) Integer id) {
         if (id != null) {
             settingsService.delete(id);
@@ -46,7 +48,7 @@ public class SettingsController {
         return new ModelAndView("redirect:/settings");
     }
 
-    @RequestMapping(value = "/setting", method = RequestMethod.POST)
+    @PostMapping("/setting")
     public ModelAndView save(Setting setting, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             if (setting.getId() == null) {
@@ -65,7 +67,7 @@ public class SettingsController {
     }
 
 
-    @RequestMapping("/settings")
+    @GetMapping("/settings")
     public String settings(Model model) {
         logger.info("Getting all Settings");
         List<Setting> settingList = settingsService.all();

@@ -11,9 +11,9 @@ public interface SettingsService {
 
     Setting findById(Integer id);
 
-    void insert(Setting Setting);
+    void insert(Setting setting);
 
-    void update(Setting Setting);
+    void update(Setting setting);
 
     void delete(Integer id);
 
