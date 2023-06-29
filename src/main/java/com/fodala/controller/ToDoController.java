@@ -1,6 +1,8 @@
 package com.fodala.controller;
 
+import com.fodala.pojo.Setting;
 import com.fodala.pojo.ToDo;
+import com.fodala.service.SettingsService;
 import com.fodala.service.ToDoService;
 import com.fodala.validation.ToDoValidationError;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,11 +29,14 @@ public class ToDoController {
     @Autowired
     private ToDoService toDoService;
 
+    @Autowired
+    private SettingsService settingsService;
+
     Optional<String> getPreviousPageByRequest(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);
     }
 
-    String buildTarget(String currentTab, String filter, Integer listId) {
+    String buildTarget(String currentTab, String filter, Integer listId, Integer page) {
         // default to myday
         String useTab = currentTab == null ? "myday" : currentTab;
         String target = useTab;
@@ -45,6 +50,7 @@ public class ToDoController {
         }
         String useFilter = filter == null ? "active" : filter;
         target += "/" + useFilter;
+        target += "/" + page;
         logger.info("Built target: {} {} {} {}", currentTab, filter, listId, target);
         return target;
     }
@@ -53,30 +59,33 @@ public class ToDoController {
     public String delete(@RequestParam(value = "id") Integer id,
                          @RequestParam(value = "currentTab") String currentTab,
                          @RequestParam(value = "filter") String filter,
+                         @RequestParam(value = "page", defaultValue = "1") Integer page,
                          @RequestParam(value = "listId", required = false) Integer listId) {
         logger.info("Deleting todo: {}", id);
         toDoService.delete(id);
-        return "redirect:/" + buildTarget(currentTab, filter, listId);
+        return "redirect:/" + buildTarget(currentTab, filter, listId, page);
     }
 
     @PostMapping("/importantStatus")
     public String importantStatus(@RequestParam(value = "id") Integer id,
                                   @RequestParam(value = "currentTab") String currentTab,
                                   @RequestParam(value = "filter") String filter,
+                                  @RequestParam(value = "page", defaultValue = "1") Integer page,
                                   @RequestParam(value = "listId", required = false) Integer listId) {
         logger.info("Marking todo important: {}", id);
         toDoService.important(id);
-        return "redirect:/" + buildTarget(currentTab, filter, listId);
+        return "redirect:/" + buildTarget(currentTab, filter, listId, page);
     }
 
     @PostMapping("/completedStatus")
     public String completedStatus(@RequestParam(value = "id") Integer id,
                                   @RequestParam(value = "currentTab") String currentTab,
                                   @RequestParam(value = "filter") String filter,
+                                  @RequestParam(value = "page", defaultValue = "1") Integer page,
                                   @RequestParam(value = "listId", required = false) Integer listId) {
         logger.info("Completed todo: {}", id);
         toDoService.completed(id);
-        return "redirect:/" + buildTarget(currentTab, filter, listId);
+        return "redirect:/" + buildTarget(currentTab, filter, listId, page);
     }
 
     @GetMapping("/back")
@@ -85,22 +94,51 @@ public class ToDoController {
         return new ModelAndView("redirect:" + referer);
     }
 
-
     @GetMapping("/calendar")
     public String calendar(Model model) {
-        addAttributes(model, Filter.COMPLETED, Tab.CALENDAR, toDoService.all());
+        addAttributes(model, Filter.COMPLETED, Tab.CALENDAR, toDoService.all(), null);
         return "calendar";
     }
 
-    void addAttributes(Model model, Filter listFilter, Tab tab, List<ToDo> todos) {
+    @GetMapping("/notifications")
+    public String notifications(Model model) {
+        addAttributes(model, Filter.ALL, Tab.NOTIFICATIONS, toDoService.all(), null);
+        model.addAttribute("notifications", toDoService.notifications());
+        return "notifications";
+    }
+
+    void addAttributes(Model model, Filter listFilter, Tab tab, List<ToDo> toDos, Integer page) {
         model.addAttribute("todo", toDoService.createEmpty());
         model.addAttribute("filter", listFilter.name);
-        model.addAttribute("todos", todos);
         model.addAttribute("title", tab.title);
         model.addAttribute("currentTab", tab.value);
-        model.addAttribute("totalNumberOfItems", todos.size());
+        model.addAttribute("totalNumberOfToDos", toDos.size());
+        List<Setting> list = settingsService.all();
+        Map<String, String> settings = list.stream()
+                .collect(Collectors.toMap(Setting::getName, Setting::getValue));
+        double maxItems = Double.parseDouble(settings.get("Max ToDo Items"));
+        model.addAttribute("maxToDoItems", (int) maxItems);
         model.addAttribute("count", toDoService.count());
         model.addAttribute("listNames", toDoService.listNames());
+        model.addAttribute("settings", settings);
+        int pages = (int) Math.ceil((double) toDos.size() / maxItems);
+        model.addAttribute("pages", pages);
+        if (page == null || page < 1) {
+            page = 1;
+        } else if (page > pages) {
+            page = pages;
+        }
+        model.addAttribute("page", page);
+        if (pages > 0) {
+            int maxItemCount = (int) maxItems;
+            int from = ((page - 1) * maxItemCount);
+            int to = from + maxItemCount;
+            if (to > toDos.size()) {
+                to = toDos.size();
+            }
+            toDos = toDos.subList(from, to);
+        }
+        model.addAttribute("todos", toDos);
     }
 
     @ExceptionHandler
@@ -112,7 +150,7 @@ public class ToDoController {
     @GetMapping("/")
     public String home(Model model) {
         logger.info("Getting all todos");
-        addAttributes(model, Filter.ACTIVE, Tab.TASKS, toDoService.all());
+        addAttributes(model, Filter.ACTIVE, Tab.TASKS, toDoService.all(), 1);
         return "index";
     }
 
@@ -137,6 +175,7 @@ public class ToDoController {
                        @RequestParam(value = "currentTab", required = false) String currentTab,
                        @RequestParam(value = "listId", required = false) Integer listId,
                        @RequestParam(value = "filter", required = false) String filter,
+                       @RequestParam(value = "page", defaultValue = "1") Integer page,
                        BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
             if (toDo.getId() == null) {
@@ -164,7 +203,7 @@ public class ToDoController {
         model.addAttribute("listId", listId);
         model.addAttribute("filter", filter);
         model.addAttribute("todo", new ToDo());
-        return "redirect:/" + buildTarget(currentTab, filter, listId);
+        return "redirect:/" + buildTarget(currentTab, filter, listId, page);
     }
 
     @PostMapping("/search")
@@ -175,7 +214,7 @@ public class ToDoController {
         List<ToDo> toDos = toDoService.search("%" + search + "%");
         logger.info("Found {} todos matching text: {}", toDos.size(), search);
         model.addAttribute("title", "Find: " + search);
-        addAttributes(model, Filter.ALL, Tab.SEARCH, toDos);
+        addAttributes(model, Filter.ALL, Tab.SEARCH, toDos, 1);
         return "index";
     }
 
@@ -187,7 +226,7 @@ public class ToDoController {
         }
         model.addAttribute("search", search);
         List<ToDo> toDos = toDoService.search("%" + search + "%");
-        addAttributes(model, Filter.ALL, Tab.SEARCH, toDos);
+        addAttributes(model, Filter.ALL, Tab.SEARCH, toDos, 1);
         model.addAttribute("title", "Searching for " + search);
         return "index";
     }
@@ -208,34 +247,37 @@ public class ToDoController {
         toDoService.createList(list);
         model.addAttribute("list", list);
         model.addAttribute("title", list);
-        addAttributes(model, Filter.ALL, Tab.LIST, Collections.emptyList());
+        addAttributes(model, Filter.ALL, Tab.LIST, Collections.emptyList(), 1);
         return "index";
     }
 
-    @GetMapping("/{tab}/{filter}")
+    @GetMapping(value = {"/{tab}/{filter}", "/{tab}/{filter}/{page}"})
     public String getTodos(Model model, @PathVariable(value = "tab") String tab,
-                           @PathVariable(value = "filter") String filter) {
-        logger.info("Getting notifications");
-        Tab tab1 = getTab(tab);
+                           @PathVariable(value = "filter") String filter,
+                           @PathVariable(value = "page", required = false) Integer page) {
+        logger.info("Getting toDos: ");
+        Tab tab1 = Tab.parse(tab);
         List<ToDo> toDos = getToDos(tab);
-        Filter filter1 = getFilter(filter);
+        Filter filter1 = Filter.parse(filter);
         toDos = filter(filter1, toDos);
-        addAttributes(model, filter1, tab1, toDos);
+        addAttributes(model, filter1, tab1, toDos, page);
         return "index";
     }
 
-    @GetMapping("/list/{id}/{filter}")
-    public String list(Model model, @PathVariable(value = "id") Integer id, @PathVariable(value = "filter") String filter) {
+    @GetMapping("/list/{id}/{filter}/{page}")
+    public String list(Model model,
+                       @PathVariable(value = "id") Integer id,
+                       @PathVariable(value = "filter") String filter,
+                       @PathVariable(value = "page", required = false) Integer page) {
         logger.info("Finding tasks for list {}", id);
         List<ToDo> toDos = toDoService.listItems(id);
-        Filter filter1 = getFilter(filter);
+        Filter filter1 = Filter.parse(filter);
         toDos = filter(filter1, toDos);
-        addAttributes(model, filter1, Tab.LIST, toDos);
+        addAttributes(model, filter1, Tab.LIST, toDos, page);
         model.addAttribute("listId", id);
         model.addAttribute("title", getListName(id));
         return "index";
     }
-
 
     private List<ToDo> filter(Filter filter, List<ToDo> toDos) {
         if (Filter.ALL == filter) {
@@ -245,24 +287,6 @@ public class ToDoController {
                     .filter(toDo -> Objects.equals(filter.completed, toDo.getCompleted()))
                     .collect(Collectors.toList());
         }
-    }
-
-    Tab getTab(String tabVal) {
-        for (Tab t : Tab.values()) {
-            if (t.value.equals(tabVal)) {
-                return t;
-            }
-        }
-        return Tab.TASKS;
-    }
-
-    Filter getFilter(String filterVal) {
-        for (Filter t : Filter.values()) {
-            if (t.name.equals(filterVal)) {
-                return t;
-            }
-        }
-        return Filter.ACTIVE;
     }
 
     List<ToDo> getToDos(String tab) {
@@ -288,16 +312,28 @@ public class ToDoController {
 
 
     enum Filter {
-        ALL("all", -1),
-        ACTIVE("active", 0),
-        COMPLETED("completed", 1);
+        ALL("all", -1, " 1 = 1 "),
+        ACTIVE("active", 0, " completed = 0 "),
+        COMPLETED("completed", 1, " completed = 1 ");
 
         final String name;
         final Integer completed;
 
-        Filter(String name, Integer completed) {
+        final String where;
+
+        Filter(String name, Integer completed, String where) {
             this.name = name;
             this.completed = completed;
+            this.where = where;
+        }
+
+        static Filter parse(String name) {
+            for (Filter t : Filter.values()) {
+                if (t.name.equals(name)) {
+                    return t;
+                }
+            }
+            return Filter.ACTIVE;
         }
     }
 
@@ -317,6 +353,14 @@ public class ToDoController {
         Tab(String value, String title) {
             this.value = value;
             this.title = title;
+        }
+        static Tab parse(String tabVal) {
+            for (Tab t : Tab.values()) {
+                if (t.value.equals(tabVal)) {
+                    return t;
+                }
+            }
+            return Tab.TASKS;
         }
     }
 

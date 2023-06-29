@@ -35,7 +35,7 @@ public class SettingsController {
             setting = settingsService.createEmpty();
         }
         model.addAttribute("setting", setting);
-        return "setting/edit";
+        return "settingsedit";
     }
 
     @GetMapping("/setting/delete")
@@ -57,7 +57,7 @@ public class SettingsController {
                 }
             }
         }
-        ModelAndView modelAndView = new ModelAndView("setting/edit");
+        ModelAndView modelAndView = new ModelAndView("settingsedit");
         modelAndView.addObject("setting", setting);
         modelAndView.addObject("currentTab", "settings");
         modelAndView.addObject("history", settingsService.history(setting.getId()));
@@ -73,6 +73,6 @@ public class SettingsController {
         model.addAttribute("settings", settingList);
         model.addAttribute("currentTab", "settings");
         model.addAttribute("count", toDoService.count());
-        return "setting/list";
+        return "settings";
     }
 }

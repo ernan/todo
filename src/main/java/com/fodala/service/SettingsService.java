@@ -6,7 +6,6 @@ import com.fodala.pojo.SettingHistory;
 import java.util.List;
 
 public interface SettingsService {
-
     List<Setting> all();
 
     Setting findById(Integer id);

@@ -2,11 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{common::#header}"></head>
 <body class="container">
-<div th:replace="~{common::#navbar}"></div>
-<br/>
-<h1>Edit Setting</h1>
-<br/>
 <div class="with:80%">
+    <br/>
+    <h1>Edit Setting</h1>
+    <br/>
     <form class="form-horizontal" id="setting-form" method="post" th:action="@{/setting}" th:object="${setting}">
         <input name="id" th:value="*{id}" type="hidden"/>
         <div class="form-group">
@@ -45,8 +44,8 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <input class="btn btn-info" type="submit" value="Submit"/> <a class="btn btn-info" href="/settings"
-                                                                              th:href="@{/settings}">Back</a>
+                <input class="btn btn-info" type="submit" value="Submit"/>
+                <a class="btn btn-info" href="/settings" th:href="@{/settings}">Back</a>
             </div>
         </div>
     </form>

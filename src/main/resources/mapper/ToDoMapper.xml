@@ -32,6 +32,9 @@
             <if test="map.endDate != null">
                 AND end_date &lt; #{map.endDate}
             </if>
+            <if test="map.limit != null and map.offset != null">
+                limit #{map.limit} offset #{map.offset}
+            </if>
         </where>
     </select>
 

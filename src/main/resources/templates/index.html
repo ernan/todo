@@ -4,165 +4,166 @@
 <head th:replace="~{common::#header}"></head>
 
 <body class="container">
-    <div class="with:80%">
-        <br />
-        <h1><span th:remove="tag" th:text="${title}">Todo List</span></h1>
-        <br />
-        <div class="row gutters-sm">
-            <div th:replace="~{common::#sidebar}"></div>
-            <div class="col-md-8">
-                <form class="form-horizontal" id="new-todo-form" method="post" th:action="@{/todo}" th:object="${todo}">
-                    <input name="currentTab" th:value="${currentTab}" type="hidden" />
-                    <input name="listId" th:value="${listId}" type="hidden" />
-                    <input name="filter" th:value="${filter}" type="hidden" />
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex flex-row align-items-center">
-                                <input autofocus class="form-control form-control-lg input-lg" name="title"
-                                    placeholder="Add new todo..." th:value="*{title}" />
-                                <div class="btn-group-vertical">
-                                    <button class="btn btn-outline-primary" type="submit">
-                                        <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
-                                            stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <line x1="12" x2="12" y1="5" y2="19" />
-                                            <line x1="5" x2="19" y1="12" y2="12" />
-                                        </svg>
-                                    </button>
-                                </div>
+<div class="with:80%">
+    <br/>
+    <h1><span th:remove="tag" th:text="${title}">Todo List</span></h1>
+    <br/>
+    <div class="row gutters-sm">
+        <div th:replace="~{common::#sidebar}"></div>
+        <div class="col-md-8">
+            <form class="form-horizontal" id="new-todo-form" method="post" th:action="@{/todo}" th:object="${todo}">
+                <div th:replace="~{common::#hidden}"></div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-row align-items-center">
+                            <input autofocus class="form-control form-control-lg input-lg" name="title"
+                                   placeholder="Add new todo..." th:value="*{title}"/>
+                            <div class="btn-group-vertical">
+                                <button class="btn btn-outline-primary" type="submit">
+                                    <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
+                                         stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <line x1="12" x2="12" y1="5" y2="19"/>
+                                        <line x1="5" x2="19" y1="12" y2="12"/>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     </div>
-                </form>
-                <div class="card">
-                    <table class="table table-hover table-striped">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                <th>Title</th>
-                                <th>Status</th>
-                                <th>Start</th>
-                                <th>End</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="todo : ${todos}">
-                                <td>
-                                    <form method="post" th:action="@{/completedStatus}"
-                                        th:id="'completed_' + ${todo.id}">
-                                        <input name="id" th:value="${todo.id}" type="hidden" />
-                                        <input name="listId" th:value="${listId != null} ? ${listId}" type="hidden" />
-                                        <input name="currentTab" th:value="${currentTab}" type="hidden" />
-                                        <input name="filter" th:value="${filter}" type="hidden" />
-                                        <div th:if="${todo.completed} == 1">
-                                            <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
-                                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <g>
-                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                                    <polyline points="22 4 12 14.01 9 11.01" />
-                                                    <rect class="btn" x="0" y="0" width="24" height="24"
-                                                        onclick="$(this).closest('form').submit();" />
-                                                </g>
-                                            </svg>
-                                        </div>
-                                        <div th:unless="${todo.completed} == 1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <g>
-                                                    <circle cx="12" cy="12" r="10" />
-                                                    <rect class="btn" x="0" y="0" width="24" height="24"
-                                                        onclick="$(this).closest('form').submit();" />
-                                                </g>
-                                            </svg>
-                                        </div>
-                                    </form>
-                                </td>
-                                <td>
-                                    <form method="post" th:action="@{/importantStatus}"
-                                        th:id="'important_' + ${todo.id}">
-                                        <input name="id" th:value="${todo.id}" type="hidden" />
-                                        <input name="currentTab" th:value="${currentTab}" type="hidden" />
-                                        <input name="filter" th:value="${filter}" type="hidden" />
-                                        <input name="listId" th:value="${listId != null} ? ${listId}" type="hidden" />
-                                        <div th:if="${todo.important} == 1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="gold" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <g>
-                                                    <polygon
-                                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                                    <rect class="btn" x="0" y="0" width="24" height="24"
-                                                        onclick="$(this).closest('form').submit();" />
-                                                </g>
-                                            </svg>
-                                        </div>
-                                        <div th:unless="${todo.important} == 1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <g>
-                                                    <polygon
-                                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                                    <rect class="btn" x="0" y="0" width="24" height="24"
-                                                        onclick="$(this).closest('form').submit();" />
-                                                </g>
-                                            </svg>
-                                        </div>
-                                    </form>
-                                </td>
-                                <td th:text="${todo.title}">todo 1</td>
-                                <td th:text="${todo.status}">Initial</td>
-                                <td th:text="${todo.start}"></td>
-                                <td th:text="${todo.end}"></td>
-                                <td><a th:href="@{/todo(id=${todo.id})}">
-                                        <svg width="24" height="24" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" stroke="black"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <g>
-                                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-                                            </g>
-                                        </svg>
-                                    </a>
-                                </td>
-                                <td>
-                                    <form method="post" th:action="@{/delete}" th:id="'delete_' + ${todo.id}">
-                                        <input name="id" th:value="${todo.id}" type="hidden" />
-                                        <input name="currentTab" th:value="${currentTab}" type="hidden" />
-                                        <input name="filter" th:value="${filter}" type="hidden" />
-                                        <input name="listId" th:value="${listId != null} ? ${listId}" type="hidden" />
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <g>
-                                                <polyline points="3 6 5 6 21 6" />
-                                                <path
-                                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                                <rect class="btn" x="0" y="0" width="24" height="24"
-                                                    onclick="$(this).closest('form').submit();" />
-                                            </g>
-                                        </svg>
-
-                                    </form>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
-                <div class="float-right" th:replace="~{common::#todosbar}"></div>
+            </form>
+            <div class="card">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="todo : ${todos}">
+                        <td>
+                            <form method="post" th:action="@{/completedStatus}"
+                                  th:id="'completed_' + ${todo.id}">
+                                <div th:replace="~{common::#hidden}"></div>
+                                <div th:if="${todo.completed} == 1">
+                                    <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
+                                         stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <g>
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                            <polyline points="22 4 12 14.01 9 11.01"/>
+                                            <rect class="btn" height="24" onclick="$(this).closest('form').submit();"
+                                                  width="24" x="0"
+                                                  y="0"/>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div th:unless="${todo.completed} == 1">
+                                    <svg fill="none" height="24" stroke="currentColor"
+                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                         viewBox="0 0 24 24"
+                                         width="24" xmlns="http://www.w3.org/2000/svg">
+                                        <g>
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <rect class="btn" height="24" onclick="$(this).closest('form').submit();"
+                                                  width="24" x="0"
+                                                  y="0"/>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="post" th:action="@{/importantStatus}"
+                                  th:id="'important_' + ${todo.id}">
+                                <div th:replace="~{common::#hidden}"></div>
+                                <div th:if="${todo.important} == 1">
+                                    <svg fill="gold" height="24" stroke="currentColor"
+                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                         viewBox="0 0 24 24"
+                                         width="24" xmlns="http://www.w3.org/2000/svg">
+                                        <g>
+                                            <polygon
+                                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                            <rect class="btn" height="24" onclick="$(this).closest('form').submit();"
+                                                  width="24" x="0"
+                                                  y="0"/>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div th:unless="${todo.important} == 1">
+                                    <svg fill="none" height="24" stroke="currentColor"
+                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                         viewBox="0 0 24 24"
+                                         width="24" xmlns="http://www.w3.org/2000/svg">
+                                        <g>
+                                            <polygon
+                                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                            <rect class="btn" height="24" onclick="$(this).closest('form').submit();"
+                                                  width="24" x="0"
+                                                  y="0"/>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </form>
+                        </td>
+                        <td th:text="${todo.title}">todo 1</td>
+                        <td th:text="${todo.status}">Initial</td>
+                        <td th:text="${todo.start}"></td>
+                        <td th:text="${todo.end}"></td>
+                        <td><a th:href="@{/todo(id=${todo.id})}">
+                            <svg fill="none" height="24" stroke="black"
+                                 stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                 viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                                </g>
+                            </svg>
+                        </a>
+                        </td>
+                        <td>
+                            <form method="post" th:action="@{/delete}" th:id="'delete_' + ${todo.id}">
+                                <div th:replace="~{common::#hidden}"></div>
+                                <svg fill="none" height="24" stroke="currentColor"
+                                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                                     width="24" xmlns="http://www.w3.org/2000/svg">
+                                    <g>
+                                        <polyline points="3 6 5 6 21 6"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                        <rect class="btn" height="24" onclick="$(this).closest('form').submit();"
+                                              width="24" x="0"
+                                              y="0"/>
+                                    </g>
+                                </svg>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
+            <div class="float-right" th:replace="~{common::#todosbar}"></div>
         </div>
-        <div th:replace="~{common::#bottom}"></div>
-        <input id="listNames" th:value="@{/api/list/names}" type="hidden" />
-        <input id="list" th:value="@{/api/list/}" type="hidden" />
-        <!--    <label class="col-sm-2 control-label" for="filter">filter</label>-->
-        <!--    <input id="filter" th:value="${filter}"/>-->
     </div>
+    <div th:replace="~{common::#bottom}"></div>
+    <input id="listNames" th:value="@{/api/list/names}" type="hidden"/>
+    <input id="list" th:value="@{/api/list/}" type="hidden"/>
+
+    <label class="col-sm-2 control-label" for="page">page</label>
+    <input id="page" th:value="${page}"/>
+    <label class="col-sm-2 control-label" for="pages">pages</label>
+    <input id="pages" th:value="${pages}"/>
+    <label class="col-sm-2 control-label" for="page">maxToDoItems</label>
+    <input id="maxToDoItems" th:value="${maxToDoItems}"/>
+    <label class="col-sm-2 control-label" for="pages">totalNumberOfToDos</label>
+    <input id="totalNumberOfToDos" th:value="${totalNumberOfToDos}"/>
+</div>
 </body>
 
 </html>
