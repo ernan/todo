@@ -17,10 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class ToDoController {
@@ -33,34 +31,52 @@ public class ToDoController {
         return Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);
     }
 
+    String buildTarget(String currentTab, String filter, Integer listId) {
+        // default to myday
+        String useTab = currentTab == null ? "myday" : currentTab;
+        String target = useTab;
+        // lists handle null or empty
+        if (useTab.equals("list")) {
+            if (listId == null)
+                target = useTab + "/1";
+            else {
+                target = useTab + "/" + listId;
+            }
+        }
+        String useFilter = filter == null ? "active" : filter;
+        target += "/" + useFilter;
+        logger.info("Built target: {} {} {} {}", currentTab, filter, listId, target);
+        return target;
+    }
+
     @PostMapping("/delete")
     public String delete(@RequestParam(value = "id") Integer id,
                          @RequestParam(value = "currentTab") String currentTab,
-                         @RequestParam(value = "list_id", required = false) Integer listId) {
+                         @RequestParam(value = "filter") String filter,
+                         @RequestParam(value = "listId", required = false) Integer listId) {
         logger.info("Deleting todo: {}", id);
         toDoService.delete(id);
-        String target = listId == null ? currentTab : currentTab + "?id=" + listId;
-        return "redirect:/" + target;
+        return "redirect:/" + buildTarget(currentTab, filter, listId);
     }
 
     @PostMapping("/importantStatus")
     public String importantStatus(@RequestParam(value = "id") Integer id,
                                   @RequestParam(value = "currentTab") String currentTab,
-                                  @RequestParam(value = "list_id", required = false) Integer list_id) {
+                                  @RequestParam(value = "filter") String filter,
+                                  @RequestParam(value = "listId", required = false) Integer listId) {
         logger.info("Marking todo important: {}", id);
         toDoService.important(id);
-        String target = list_id == null ? currentTab : currentTab + "?id=" + list_id;
-        return "redirect:/" + target;
+        return "redirect:/" + buildTarget(currentTab, filter, listId);
     }
 
     @PostMapping("/completedStatus")
     public String completedStatus(@RequestParam(value = "id") Integer id,
                                   @RequestParam(value = "currentTab") String currentTab,
-                                  @RequestParam(value = "list_id", required = false) Integer list_id) {
+                                  @RequestParam(value = "filter") String filter,
+                                  @RequestParam(value = "listId", required = false) Integer listId) {
         logger.info("Completed todo: {}", id);
         toDoService.completed(id);
-        String target = list_id == null ? currentTab : currentTab + "?id=" + list_id;
-        return "redirect:/" + target;
+        return "redirect:/" + buildTarget(currentTab, filter, listId);
     }
 
     @GetMapping("/back")
@@ -69,12 +85,6 @@ public class ToDoController {
         return new ModelAndView("redirect:" + referer);
     }
 
-    @GetMapping("/active")
-    public String indexActive(Model model) {
-        addAttributes(model, Filter.ACTIVE, Tab.TASKS,
-                toDoService.filter(Collections.singletonMap("completed", 0)));
-        return "index";
-    }
 
     @GetMapping("/calendar")
     public String calendar(Model model) {
@@ -82,16 +92,9 @@ public class ToDoController {
         return "calendar";
     }
 
-    @GetMapping("/completed")
-    public String indexCompleted(Model model) {
-        addAttributes(model, Filter.COMPLETED, Tab.TASKS,
-                toDoService.filter(Collections.singletonMap("completed", 1)));
-        return "index";
-    }
-
     void addAttributes(Model model, Filter listFilter, Tab tab, List<ToDo> todos) {
         model.addAttribute("todo", toDoService.createEmpty());
-        model.addAttribute("filter", listFilter);
+        model.addAttribute("filter", listFilter.name);
         model.addAttribute("todos", todos);
         model.addAttribute("title", tab.title);
         model.addAttribute("currentTab", tab.value);
@@ -109,44 +112,11 @@ public class ToDoController {
     @GetMapping("/")
     public String home(Model model) {
         logger.info("Getting all todos");
-        addAttributes(model, Filter.ALL, Tab.TASKS, toDoService.all());
+        addAttributes(model, Filter.ACTIVE, Tab.TASKS, toDoService.all());
         return "index";
     }
 
-    @GetMapping("/tasks")
-    public String tasks(Model model) {
-        logger.info("Getting all tasks");
-        addAttributes(model, Filter.ALL, Tab.TASKS, toDoService.all());
-        return "index";
-    }
-
-    @GetMapping("/planned")
-    public String planned(Model model) {
-        logger.info("Getting all planned todos");
-        model.addAttribute("title", "Planned");
-        LocalDateTime start = LocalDateTime.now();
-        LocalDateTime end = LocalDateTime.now().plusYears(100L);
-        addAttributes(model, Filter.ALL, Tab.PLANNED, toDoService.findByDate(start, end));
-        return "index";
-    }
-
-    @GetMapping("/important")
-    public String important(Model model) {
-        logger.info("Getting all important todos");
-        addAttributes(model, Filter.ALL, Tab.IMPORTANT, toDoService.filter(Collections.singletonMap("important", 1)));
-        return "index";
-    }
-
-    @GetMapping("/myday")
-    public String myDay(Model model) {
-        logger.info("Getting My Day todos");
-        LocalDateTime start = LocalDateTime.now();
-        LocalDateTime end = LocalDateTime.now().plusDays(1L);
-        addAttributes(model, Filter.ALL, Tab.MY_DAY, toDoService.findByDate(start, end));
-        return "index";
-    }
-
-    @RequestMapping(value = "/todo", method = RequestMethod.GET)
+    @GetMapping("/todo")
     public String todo(@RequestParam(value = "id", required = false) Integer id,
                        Model model) {
         ToDo toDo;
@@ -165,7 +135,8 @@ public class ToDoController {
     @PostMapping("/todo")
     public String save(ToDo toDo,
                        @RequestParam(value = "currentTab", required = false) String currentTab,
-                       @RequestParam(value = "list_id", required = false) Integer list_id,
+                       @RequestParam(value = "listId", required = false) Integer listId,
+                       @RequestParam(value = "filter", required = false) String filter,
                        BindingResult bindingResult, Model model) {
         if (!bindingResult.hasErrors()) {
             if (toDo.getId() == null) {
@@ -178,7 +149,7 @@ public class ToDoController {
                 toDo.setStatus("New");
                 int id = toDoService.insert(toDo);
                 if (currentTab.equals(Tab.LIST.value)) {
-                    toDoService.insertListItem(list_id, id);
+                    toDoService.insertListItem(listId, id);
                 }
                 logger.info("Inserted todo {}", toDo);
             } else {
@@ -190,18 +161,19 @@ public class ToDoController {
         }
         model.addAttribute("currentTab", currentTab);
         model.addAttribute("title", currentTab);
-        model.addAttribute("list_id", list_id);
+        model.addAttribute("listId", listId);
+        model.addAttribute("filter", filter);
         model.addAttribute("todo", new ToDo());
-        String target = list_id == null ? currentTab : currentTab + "?id=" + list_id;
-        return "redirect:/" + target;
+        return "redirect:/" + buildTarget(currentTab, filter, listId);
     }
 
     @PostMapping("/search")
     public String search(@RequestParam(value = "search", required = false) String search, Model model, HttpSession session) {
-        logger.info("Finding tasks containing text");
+        logger.info("Finding tasks containing text: {}", search);
         model.addAttribute("search", search);
         session.setAttribute("search", search);
         List<ToDo> toDos = toDoService.search("%" + search + "%");
+        logger.info("Found {} todos matching text: {}", toDos.size(), search);
         model.addAttribute("title", "Find: " + search);
         addAttributes(model, Filter.ALL, Tab.SEARCH, toDos);
         return "index";
@@ -217,16 +189,6 @@ public class ToDoController {
         List<ToDo> toDos = toDoService.search("%" + search + "%");
         addAttributes(model, Filter.ALL, Tab.SEARCH, toDos);
         model.addAttribute("title", "Searching for " + search);
-        return "index";
-    }
-
-    @GetMapping("/list")
-    public String list(@RequestParam(value = "id") Integer id, Model model) {
-        logger.info("Finding tasks for list {}", id);
-        List<ToDo> toDos = toDoService.listItems(id);
-        addAttributes(model, Filter.ALL, Tab.LIST, toDos);
-        model.addAttribute("list_id", id);
-        model.addAttribute("title", getListName(id));
         return "index";
     }
 
@@ -250,27 +212,92 @@ public class ToDoController {
         return "index";
     }
 
-    @GetMapping("/notifications")
-    public String notifications(Model model) {
+    @GetMapping("/{tab}/{filter}")
+    public String getTodos(Model model, @PathVariable(value = "tab") String tab,
+                           @PathVariable(value = "filter") String filter) {
         logger.info("Getting notifications");
-        addAttributes(model, Filter.ALL, Tab.NOTIFICATIONS, Collections.emptyList());
-        return "notifications";
+        Tab tab1 = getTab(tab);
+        List<ToDo> toDos = getToDos(tab);
+        Filter filter1 = getFilter(filter);
+        toDos = filter(filter1, toDos);
+        addAttributes(model, filter1, tab1, toDos);
+        return "index";
+    }
+
+    @GetMapping("/list/{id}/{filter}")
+    public String list(Model model, @PathVariable(value = "id") Integer id, @PathVariable(value = "filter") String filter) {
+        logger.info("Finding tasks for list {}", id);
+        List<ToDo> toDos = toDoService.listItems(id);
+        Filter filter1 = getFilter(filter);
+        toDos = filter(filter1, toDos);
+        addAttributes(model, filter1, Tab.LIST, toDos);
+        model.addAttribute("listId", id);
+        model.addAttribute("title", getListName(id));
+        return "index";
+    }
+
+
+    private List<ToDo> filter(Filter filter, List<ToDo> toDos) {
+        if (Filter.ALL == filter) {
+            return toDos;
+        } else {
+            return toDos.stream()
+                    .filter(toDo -> Objects.equals(filter.completed, toDo.getCompleted()))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    Tab getTab(String tabVal) {
+        for (Tab t : Tab.values()) {
+            if (t.value.equals(tabVal)) {
+                return t;
+            }
+        }
+        return Tab.TASKS;
+    }
+
+    Filter getFilter(String filterVal) {
+        for (Filter t : Filter.values()) {
+            if (t.name.equals(filterVal)) {
+                return t;
+            }
+        }
+        return Filter.ACTIVE;
+    }
+
+    List<ToDo> getToDos(String tab) {
+        switch (tab) {
+            case "planned" -> {
+                LocalDateTime start = LocalDateTime.now();
+                LocalDateTime end = LocalDateTime.now().plusYears(100L);
+                return toDoService.findByDate(start, end);
+            }
+            case "myday" -> {
+                LocalDateTime start = LocalDateTime.now();
+                LocalDateTime end = LocalDateTime.now().plusDays(1L);
+                return toDoService.findByDate(start, end);
+            }
+            case "important" -> {
+                return toDoService.filter(Collections.singletonMap("important", 1));
+            }
+            default -> {
+                return toDoService.all();
+            }
+        }
     }
 
 
     enum Filter {
-        ALL("all"),
-        ACTIVE("active"),
-        COMPLETED("completed");
+        ALL("all", -1),
+        ACTIVE("active", 0),
+        COMPLETED("completed", 1);
 
-        final String value;
+        final String name;
+        final Integer completed;
 
-        Filter(String value) {
-            this.value = value;
-        }
-
-        public String toString() {
-            return value;
+        Filter(String name, Integer completed) {
+            this.name = name;
+            this.completed = completed;
         }
     }
 
@@ -290,10 +317,6 @@ public class ToDoController {
         Tab(String value, String title) {
             this.value = value;
             this.title = title;
-        }
-
-        public String toString() {
-            return value;
         }
     }
 

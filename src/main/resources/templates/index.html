@@ -1,105 +1,154 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{common::#header}"></head>
+
 <body class="container">
-<div class="with:80%">
-    <br/>
-    <h1><span th:remove="tag" th:text="${title}">Todo List</span></h1>
-    <br/>
-    <div class="row gutters-sm">
-        <div th:replace="~{common::#sidebar}"></div>
-        <div class="col-md-8">
-            <form class="form-horizontal" id="new-todo-form" method="post" th:action="@{/todo}" th:object="${todo}">
-                <input name="currentTab" th:value="${currentTab}" type="hidden"/>
-                <input name="list_id" th:value="${list_id}" type="hidden"/>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex flex-row align-items-center">
-                            <input autofocus class="form-control form-control-lg input-lg"
-                                   name="title" placeholder="Add new todo..." th:value="*{title}"/>
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-outline-primary">
-                                    <img onclick="$(this).closest('form').submit();"
-                                         th:src="@{/images/check-enabled.svg}"/>
-                                </button>
+    <div class="with:80%">
+        <br />
+        <h1><span th:remove="tag" th:text="${title}">Todo List</span></h1>
+        <br />
+        <div class="row gutters-sm">
+            <div th:replace="~{common::#sidebar}"></div>
+            <div class="col-md-8">
+                <form class="form-horizontal" id="new-todo-form" method="post" th:action="@{/todo}" th:object="${todo}">
+                    <input name="currentTab" th:value="${currentTab}" type="hidden" />
+                    <input name="listId" th:value="${listId}" type="hidden" />
+                    <input name="filter" th:value="${filter}" type="hidden" />
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-row align-items-center">
+                                <input autofocus class="form-control form-control-lg input-lg" name="title"
+                                    placeholder="Add new todo..." th:value="*{title}" />
+                                <div class="btn-group-vertical">
+                                    <button class="btn btn-outline-primary" type="submit">
+                                        <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
+                                            stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <line x1="12" x2="12" y1="5" y2="19" />
+                                            <line x1="5" x2="19" y1="12" y2="12" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </form>
+                <div class="card">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="todo : ${todos}">
+                                <td>
+                                    <form method="post" th:action="@{/completedStatus}"
+                                        th:id="'completed_' + ${todo.id}">
+                                        <input name="id" th:value="${todo.id}" type="hidden" />
+                                        <input name="listId" th:value="${listId != null} ? ${listId}" type="hidden" />
+                                        <input name="currentTab" th:value="${currentTab}" type="hidden" />
+                                        <input name="filter" th:value="${filter}" type="hidden" />
+                                        <div th:if="${todo.completed} == 1">
+                                            <button class="btn btn-table" type="submit">
+                                                <svg fill="none" height="24" stroke="currentColor"
+                                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div th:unless="${todo.completed} == 1">
+                                            <button class="btn btn-table" type="submit">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="10" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="post" th:action="@{/importantStatus}"
+                                        th:id="'important_' + ${todo.id}">
+                                        <input name="id" th:value="${todo.id}" type="hidden" />
+                                        <input name="currentTab" th:value="${currentTab}" type="hidden" />
+                                        <input name="filter" th:value="${filter}" type="hidden" />
+                                        <input name="listId" th:value="${listId != null} ? ${listId}" type="hidden" />
+                                        <div th:if="${todo.important} == 1">
+                                            <button class="btn btn-table" type="submit">
+                                            <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="gold"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                            >
+                                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                            </svg>
+                                            </button>
+                                        </div>
+                                        <div th:unless="${todo.important} == 1">
+                                            <button class="btn btn-table" type="submit">
+                                            <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                            >
+                                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                            </svg>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td th:text="${todo.title}">todo 1</td>
+                                <td th:text="${todo.status}">Initial</td>
+                                <td th:text="${todo.start}"></td>
+                                <td th:text="${todo.end}"></td>
+                                <td><a th:href="@{todo(id=${todo.id})}"><img th:src="@{/images/edit-2.svg}" /></a></td>
+                                <td>
+                                    <form method="post" th:action="@{/delete}" th:id="'delete_' + ${todo.id}">
+                                        <input name="id" th:value="${todo.id}" type="hidden" />
+                                        <input name="currentTab" th:value="${currentTab}" type="hidden" />
+                                        <input name="filter" th:value="${filter}" type="hidden" />
+                                        <input name="listId" th:value="${listId != null} ? ${listId}" type="hidden" />
+                                        <img onclick="$(this).closest('form').submit();"
+                                            th:src="@{/images/trash.svg}" />
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </form>
-            <div class="card">
-                <div class="float-right" th:replace="~{common::#statusbar}"></div>
-                <table class="table table-hover table-striped">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Start</th>
-                        <th>End</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="todo : ${todos}">
-                        <td>
-                            <form method="post" th:action="@{/completedStatus}"
-                                  th:id="'completed_' + ${todo.id}">
-                                <input name="id" th:value="${todo.id}" type="hidden"/>
-                                <input name="list_id" th:value="${list_id != null} ? ${list_id}" type="hidden"/>
-                                <input name="currentTab" th:value="${currentTab}" type="hidden"/>
-                                <div th:if="${todo.completed} == 1">
-                                    <img onclick="$(this).closest('form').submit();"
-                                         th:src="@{/images/check-circle.svg}"/>
-                                </div>
-                                <div th:unless="${todo.completed} == 1">
-                                    <img onclick="$(this).closest('form').submit();"
-                                         th:src="@{/images/circle.svg}"/>
-                                </div>
-                            </form>
-                        </td>
-                        <td>
-                            <form method="post" th:action="@{/importantStatus}"
-                                  th:id="'important_' + ${todo.id}">
-                                <input name="id" th:value="${todo.id}" type="hidden"/>
-                                <input name="currentTab" th:value="${currentTab}" type="hidden"/>
-                                <input name="list_id" th:value="${list_id != null} ? ${list_id}" type="hidden"/>
-                                <div th:if="${todo.important} == 1">
-                                    <img onclick="$(this).closest('form').submit();"
-                                         th:src="@{/images/star-enabled.svg}"/>
-                                </div>
-                                <div th:unless="${todo.important} == 1">
-                                    <img onclick="$(this).closest('form').submit();"
-                                         th:src="@{/images/star.svg}"/>
-                                </div>
-                            </form>
-                        </td>
-                        <td th:text="${todo.title}">todo 1</td>
-                        <td th:text="${todo.status}">Initial</td>
-                        <td th:text="${todo.start}"></td>
-                        <td th:text="${todo.end}"></td>
-                        <td><a th:href="@{todo(id=${todo.id})}"><img th:src="@{/images/edit-2.svg}"/></a></td>
-                        <td>
-                            <form method="post" th:action="@{/delete}" th:id="'delete_' + ${todo.id}">
-                                <input name="id" th:value="${todo.id}" type="hidden"/>
-                                <input name="currentTab" th:value="${currentTab}" type="hidden"/>
-                                <input name="list_id" th:value="${list_id != null} ? ${list_id}" type="hidden"/>
-                                <img onclick="$(this).closest('form').submit();"
-                                     th:src="@{/images/trash.svg}"/>
-                            </form>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="float-right" th:replace="~{common::#todosbar}"></div>
             </div>
-            <div th:replace="~{common::#pagination}"></div>
         </div>
+        <div th:replace="~{common::#bottom}"></div>
+        <input id="listNames" th:value="@{/api/list/names}" type="hidden" />
+        <input id="list" th:value="@{/api/list/}" type="hidden" />
+        <!--    <label class="col-sm-2 control-label" for="filter">filter</label>-->
+        <!--    <input id="filter" th:value="${filter}"/>-->
     </div>
-    <div th:replace="~{common::#bottom}"></div>
-    <input id="listNames" th:value="@{/api/list/names}" type="hidden"/>
-    <input id="list" th:value="@{/api/list/}" type="hidden"/>
-</div>
 </body>
+
 </html>

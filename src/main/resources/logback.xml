@@ -8,11 +8,11 @@
         </encoder>
     </appender>
 
-    <logger name="com.fodala.mapper.SettingsMapper" level="trace">
+    <logger name="com.fodala.mapper.SettingsMapper" level="info">
     </logger>
-    <logger name="com.fodala.mapper.SessionMapper" level="trace">
+    <logger name="com.fodala.mapper.SessionMapper" level="info">
     </logger>
-    <logger name="com.fodala.mapper.ToDoMapper" level="trace">
+    <logger name="com.fodala.mapper.ToDoMapper" level="info">
     </logger>
 
 

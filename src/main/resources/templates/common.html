@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head id="header" th:fragment="header">
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script crossorigin="anonymous"
@@ -25,41 +26,21 @@
             font-family: inherit;
             font-size: inherit;
         }
-
+        .btn-table {
+            border: none;
+            outline: none;
+            background: none;
+            cursor: pointer;
+            color: #0000EE;
+            text-decoration: none;
+            padding: 2;
+            font-family: inherit;
+            font-size: inherit;
+        }
     </style>
 </head>
-<body>
 
-<nav class="navbar navbar-expand-lg bg-light" id="navbar">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}">ToDo</a>
-        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-                class="navbar-toggler" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a aria-current="page" class="nav-link"
-                       th:classappend="${currentTab == 'home'} ? 'active':''" th:href="@{/}">Home</a>
-                </li>
-                <li class="nav-item"><a class="nav-link" th:classappend="${currentTab == 'tasks'} ? 'active':''"
-                                        th:href="@{/tasks}">Tasks</a></li>
-                <li class="nav-item"><a class="nav-link" th:classappend="${currentTab == 'settings'} ? 'active':''"
-                                        th:href="@{/settings}">Settings</a>
-                </li>
-                <li class="nav-item"><a class="nav-link" th:classappend="${currentTab == 'calendar'} ? 'active':''"
-                                        th:href="@{/calendar}">Calendar</a>
-                </li>
-                <li class="nav-item"><a class="nav-link disabled">Services</a></li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input aria-label="Search" class="form-control me-2" placeholder="Search" type="search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        </div>
-    </div>
-</nav>
+<body>
 
 <div class="col-md-3 d-none d-md-block" id="sidebar">
     <div class="card">
@@ -67,13 +48,17 @@
             <input aria-label="Search" class="form-control me-2" id="search" name="search" placeholder="Search"
                    th:classappend="${currentTab == 'search'} ? 'active':''" th:value="${search}" type="search">
             <button class="btn btn-outline-primary" type="submit">
-                <img onclick="$(this).closest('form').submit();"
-                     th:src="@{/images/search.svg}"/></button>
+                <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                     stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" x2="16.65" y1="21" y2="16.65"/>
+                </svg>
+            </button>
         </form>
         <div class="card-body">
             <nav class="nav flex-column nav-pills nav-gap-y-1">
-                <a class="nav-item nav-link has-icon nav-link-faded"
-                   data-toggle="tab" th:classappend="${currentTab == 'myday'} ? 'active':''" th:href="@{/myday}">
+                <a class="nav-item nav-link has-icon nav-link-faded" data-toggle="tab"
+                   th:classappend="${currentTab == 'myday'} ? 'active':''" th:href="@{/myday/} + ${filter}">
                     <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
                          stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
                          xmlns="http://www.w3.org/2000/svg">
@@ -83,9 +68,9 @@
                     My Day
                     <span class="badge badge-default" th:classappend="${currentTab == 'myday'} ? '':'bg-secondary'"
                           th:text="${count?.myday}"></span>
-                </a> <a class="nav-item nav-link has-icon nav-link-faded"
-                        data-toggle="tab" th:classappend="${currentTab == 'important'} ? 'active':''"
-                        th:href="@{/important}">
+                </a> <a class="nav-item nav-link has-icon nav-link-faded" data-toggle="tab"
+                        th:classappend="${currentTab == 'important'} ? 'active':''"
+                        th:href="@{/important/} + ${filter}">
                 <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
                      stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
                      xmlns="http://www.w3.org/2000/svg">
@@ -93,11 +78,11 @@
                             points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                 </svg>
                 Important
-                <span class="badge badge-default" th:classappend="${currentTab == 'important'} ? '':'bg-secondary'"
+                <span class="badge badge-default"
+                      th:classappend="${currentTab == 'important'} ? '':'bg-secondary'"
                       th:text="${count?.important}"></span>
-            </a> <a class="nav-item nav-link has-icon nav-link-faded"
-                    data-toggle="tab" th:classappend="${currentTab == 'planned'} ? 'active':''"
-                    th:href="@{/planned}">
+            </a> <a class="nav-item nav-link has-icon nav-link-faded" data-toggle="tab"
+                    th:classappend="${currentTab == 'planned'} ? 'active':''" th:href="@{/planned/} + ${filter}">
                 <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
                      stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
                      xmlns="http://www.w3.org/2000/svg">
@@ -106,11 +91,11 @@
                     <line x1="17.5" x2="9" y1="15" y2="15"/>
                 </svg>
                 Planned
-                <span class="badge badge-default" th:classappend="${currentTab == 'planned'} ? '':'bg-secondary'"
+                <span class="badge badge-default"
+                      th:classappend="${currentTab == 'planned'} ? '':'bg-secondary'"
                       th:text="${count?.planned}"></span>
-            </a> <a class="nav-item nav-link has-icon nav-link-faded"
-                    data-toggle="tab" th:classappend="${currentTab == 'settings'} ? 'active':''"
-                    th:href="@{/settings}">
+            </a> <a class="nav-item nav-link has-icon nav-link-faded" data-toggle="tab"
+                    th:classappend="${currentTab == 'settings'} ? 'active':''" th:href="@{/settings/} + ${filter}">
                 <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
                      stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
                      xmlns="http://www.w3.org/2000/svg">
@@ -119,9 +104,9 @@
                             d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                 </svg>
                 Settings
-            </a> <a class="nav-item nav-link has-icon nav-link-faded"
-                    data-toggle="tab" th:classappend="${currentTab == 'notifications'} ? 'active':''"
-                    th:href="@{/notifications}">
+            </a> <a class="nav-item nav-link has-icon nav-link-faded" data-toggle="tab"
+                    th:classappend="${currentTab == 'notifications'} ? 'active':''"
+                    th:href="@{/notifications/} + ${filter}">
                 <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
                      stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
                      xmlns="http://www.w3.org/2000/svg">
@@ -129,8 +114,8 @@
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                 </svg>
                 Notification
-            </a> <a class="nav-item nav-link has-icon nav-link-faded"
-                    data-toggle="tab" th:classappend="${currentTab == 'tasks'} ? 'active':''" th:href="@{/tasks}">
+            </a> <a class="nav-item nav-link has-icon nav-link-faded" data-toggle="tab"
+                    th:classappend="${currentTab == 'tasks'} ? 'active':''" th:href="@{/tasks/} + ${filter}">
                 <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
                      stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
                      xmlns="http://www.w3.org/2000/svg">
@@ -141,9 +126,8 @@
                 <span class="badge badge-default" th:classappend="${currentTab == 'tasks'} ? '':'bg-secondary'"
                       th:text="${count?.tasks}"></span>
             </a>
-                <a class="nav-item nav-link has-icon nav-link-faded"
-                   data-toggle="tab" th:classappend="${currentTab == 'calendar'} ? 'active':''"
-                   th:href="@{/calendar}">
+                <a class="nav-item nav-link has-icon nav-link-faded" data-toggle="tab"
+                   th:classappend="${currentTab == 'calendar'} ? 'active':''" th:href="@{/calendar/} + ${filter}">
                     <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
                          stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
                          xmlns="http://www.w3.org/2000/svg">
@@ -159,22 +143,34 @@
             <table>
                 <tr th:each="listName: ${listNames}">
                     <td>
-                        <a th:href="@{list(id=${listName.id})}">
-                            <img th:src="@{/images/list.svg}"/>
+                        <a th:href="@{/list/} + ${listName.id} + '/' + ${filter}">
+                            <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
+                                 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <line x1="8" x2="21" y1="6" y2="6"/>
+                                <line x1="8" x2="21" y1="12" y2="12"/>
+                                <line x1="8" x2="21" y1="18" y2="18"/>
+                                <line x1="3" x2="3.01" y1="6" y2="6"/>
+                                <line x1="3" x2="3.01" y1="12" y2="12"/>
+                                <line x1="3" x2="3.01" y1="18" y2="18"/>
+                            </svg>
                             <button class="btn btn-link active" th:text="${listName.name}"></button>
                         </a>
                     </td>
                 </tr>
             </table>
             <hr/>
-            <form class="form-horizontal" id="new-list-form" method="post"
-                  th:action="@{/addList}" th:id="list_add">
+            <form class="form-horizontal" id="new-list-form" method="post" th:action="@{/addList}" th:id="list_add">
                 <div class="d-flex flex-row align-items-center">
                     <input class="form-control" name="list" placeholder="Add new list..."/>
                     <div class="btn-group-vertical">
-                        <button class="btn btn-outline-primary">
-                            <img onclick="$(this).closest('form').submit();"
-                                 th:src="@{/images/plus.svg}"/>
+                        <button class="btn btn-outline-primary" onclick="$(this).closest('form').submit();">
+                            <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
+                                 stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <line x1="12" x2="12" y1="5" y2="19"/>
+                                <line x1="5" x2="19" y1="12" y2="12"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -183,62 +179,66 @@
     </div>
 </div>
 
-<nav class="navbar navbar-expand-lg bg-light" id="statusbar">
-    <div th:if="${todos.size() > 10}">
-        <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a aria-controls="ex1-tabs-1"
-                   aria-selected="true"
-                   class="nav-link active"
-                   data-mdb-toggle="tab"
-                   href="#ex1-tabs-1"
-                   id="ex1-tab-1"
-                   role="tab">Active</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a aria-controls="ex1-tabs-2"
-                   aria-selected="false"
-                   class="nav-link"
-                   data-mdb-toggle="tab"
-                   href="#ex1-tabs-2"
-                   id="ex1-tab-2"
-                   role="tab">Completed</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a aria-controls="ex1-tabs-3"
-                   aria-selected="false"
-                   class="nav-link"
-                   data-mdb-toggle="tab"
-                   href="#ex1-tabs-3"
-                   id="ex1-tab-3"
-                   role="tab">All</a>
-            </li>
-        </ul>
+<div aria-label="Toolbar with button groups" class="btn-toolbar justify-content-between" id="todosbar"
+     role="toolbar">
+    <nav aria-label="Filter todos based upon completion">
+        <div th:unless="${listId}">
+            <ul class="pagination justify-content-end">
+                <li class="page-item" th:classappend="${filter == 'active'} ? 'active':''">
+                    <a class="page-link" th:href="@{/} + ${currentTab} + '/active'">Active</a>
+                </li>
+                <li class="page-item" th:classappend="${filter == 'completed'} ? 'active':''">
+                    <a class="page-link" th:href="@{/} + ${currentTab} + '/completed'">Completed</a>
+                </li>
+                <li class="page-item" th:classappend="${filter == 'all'} ? 'active':''">
+                    <a class="page-link" th:href="@{/} + ${currentTab} + '/all'">All</a>
+                </li>
+            </ul>
+        </div>
+        <div th:if="${listId}">
+            <ul class="pagination justify-content-end">
+                <li class="page-item" th:classappend="${filter == 'active'} ? 'active':''">
+                    <a class="page-link" th:href="@{/list/} + ${listId} + '/active'">Active</a>
+                </li>
+                <li class="page-item" th:classappend="${filter == 'completed'} ? 'active':''">
+                    <a class="page-link" th:href="@{/list/} + ${listId} + '/completed'">Completed</a>
+                </li>
+                <li class="page-item" th:classappend="${filter == 'all'} ? 'active':''">
+                    <a class="page-link" th:href="@{/list/} + ${listId} + '/all'">All</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="input-group">
+        <nav aria-label="Navigate through todos" th:if="${#lists.size(todos) > 10}">
+            <div th:if="${todos.size() > 10}">
+                <ul class="pagination justify-content-end">
+                    <li class="page-item disabled">
+                        <a class="page-link">Previous</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </div>
-</nav>
-
-<nav th:if="${#lists.size(todos) > 10}" aria-label="Navigate through todos" id="pagination">
-    <ul class="pagination justify-content-end">
-        <li class="page-item disabled">
-            <a class="page-link">Previous</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-            <a class="page-link" href="#">Next</a>
-        </li>
-    </ul>
-</nav>
+</div>
 
 <footer class="page-footer font-small blue" id="bottom">
     <div class="footer-copyright text-center py-3">
         <a href="https://github.com/ernan/todo">
-            <img th:src="@{/images/github.svg}"/></a>© 2023 Copyright: <a href="http://programmer.ie">
-        programmer.ie </a>
+            <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                 stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+        </a>© 2023 Copyright: <a href="http://programmer.ie">programmer.ie </a>
     </div>
 </footer>
-
 </body>
 
 </html>
