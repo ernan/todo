@@ -2,6 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{common::#header}"></head>
 <body class="container">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
 <div class="with:80%">
     <br/>
     <h1 th:value="*{todo.title}">Edit Todo...</h1>
@@ -39,16 +43,14 @@
                        th:value="*{todo.completed}" type="text"/>
             </div>
         </div>
-        <div class="form-group">
+        <div class="row">
             <label class="col-sm-2 control-label" for="start">Start</label>
-            <div class="col-sm-10">
+            <div class="col-sm-3">
                 <input class="form-control" id="start" name="start" placeholder="2024-12-12" th:value="*{todo.start}"
                        type="text"/>
             </div>
-        </div>
-        <div class="form-group">
             <label class="col-sm-2 control-label" for="start">End</label>
-            <div class="col-sm-10">
+            <div class="col-sm-3">
                 <input class="form-control" id="end" name="end" placeholder="2024-12-12" th:value="*{todo.end}"
                        type="text"/>
             </div>
@@ -119,6 +121,15 @@
         </table>
     </div>
 </div>
+<script>
+    $(function(){
+        $("#start").datepicker();
+    });
+    $(function(){
+        $("#end").datepicker();
+    });
+</script>
+
 </body>
 
 </html>
