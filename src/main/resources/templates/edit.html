@@ -9,10 +9,8 @@
 <script>
 
     $(document).ready(function() {
-        /*<![CDATA[*/
-        let completed = /*[[${todo.completed}]]*/ 0;
-        let important = /*[[${todo.important}]]*/ 0;
-        /*]]>*/
+        let completed = [[${todo.completed}]];
+        let important = [[${todo.important}]];
 
         window.completed = function (isComplete) {
             console.log("Setting isComplete: " + isComplete);
@@ -41,8 +39,8 @@
             }
         }
 
-        window.completed(completed == 0);
-        window.important(important == 0);
+        window.completed(completed != 0);
+        window.important(important != 0);
     });
 </script>
 
