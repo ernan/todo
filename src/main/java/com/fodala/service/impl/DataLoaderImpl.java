@@ -11,13 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 @Service
 public class DataLoaderImpl implements DataLoader {
@@ -51,5 +47,47 @@ public class DataLoaderImpl implements DataLoader {
             logger.error(e.getMessage(), e);
         }
         return "";
+    }
+
+    public void saveFileToTable(String filePath, String tableName) {
+        try (Connection connection = ds.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement("INSERT INTO " + tableName + "(name, uploaded_path, file_size, file_type, data) VALUES (?,?,?,?,?)");
+        		FileInputStream inputStream = new FileInputStream(new File(filePath))
+        ) {
+            File file = new File(filePath);
+            statement.setString(1, file.getName());
+            statement.setString(2, filePath);
+            statement.setInt(3, (int) file.length());
+            String fileType = "";
+            int i = filePath.lastIndexOf('.');
+            if (i > 0) {
+                fileType = filePath.substring(i + 1);
+            }
+            statement.setString(4, fileType);
+            byte[] ba = new byte[(int) file.length()];
+            int read = inputStream.read(ba);
+            logger.info("Read {} bytes from file {}", read, filePath);
+            statement.setBytes(5, ba);
+            statement.executeUpdate();
+            logger.info("File saved to database successfully.");
+        } catch (SQLException | IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    public void exportFile(String tableName, String targetPath, String column, Integer id) {
+        try (Connection connection = ds.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement("SELECT " + column + " FROM " + tableName + " WHERE id = " + id);
+             ResultSet rs = statement.executeQuery()
+        ) {
+            byte[] ba = rs.getBytes(1);
+            try (FileOutputStream fileOutputStream = new FileOutputStream(targetPath)) {
+                fileOutputStream.write(ba);
+            }
+        } catch (SQLException | IOException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 }

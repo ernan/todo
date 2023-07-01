@@ -325,9 +325,10 @@ DROP TABLE IF EXISTS uploaded_file;
 create table uploaded_file (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    uploaded_path TEXT NOT NULL,
-    file_size INTEGER not null,
-    uploaded_date TEXT NOT NULL,
-    user_name TEXT NOT NULL,
-    file_type TEXT NOT NULL
+    uploaded_path TEXT NULL,
+    file_size INTEGER NULL,
+    uploaded_date TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_name TEXT NULL,
+    file_type TEXT NOT NULL,
+    data BLOB NULL
 );

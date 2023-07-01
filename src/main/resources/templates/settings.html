@@ -1,70 +1,57 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{common::#header}"></head>
+
 <body class="container">
-<div class="with:80%">
-    <br/>
-    <h1>Settings</h1>
-    <br/>
-    <div class="row gutters-sm">
-        <div th:replace="~{common::#sidebar}"></div>
-        <div class="col-md-9 d-none d-md-block">
-            <div class="card">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <div th:each="setting : ${settings}">
-                        <tr th:attr="row_id=${setting.id}" th:title="${setting.description}">
-                            <td><input class="form-control" readonly="true" th:value="${setting.name}"/></td>
-                            <td><input class="form-control" readonly="true" th:value="${setting.value}"/></td>
-                            <td>
-                                <a th:href="@{setting(id=${setting.id})}">
-                                    <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            stroke="black"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                    >
-                                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
-                                    </svg>
-                                </a>
-                            </td>
-                            <td><a th:href="@{setting/delete(id=${setting.id})}">
-                                <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="black"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                >
-                                    <polyline points="3 6 5 6 21 6"/>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                                </svg>
-                            </a>
-                            </td>
-                        </tr>
-                    </div>
-                    </tbody>
-                </table>
+    <div class="with:80%">
+        <br />
+        <h1>Settings</h1>
+        <br />
+        <div class="row gutters-sm">
+            <div th:replace="~{common::#sidebar}"></div>
+            <div class="col-md-9 d-none d-md-block">
+                <div class="card">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <div th:each="setting : ${settings}">
+                                <tr th:attr="row_id=${setting.id}" th:title="${setting.description}">
+                                    <td><input class="form-control" readonly="true" th:value="${setting.name}" /></td>
+                                    <td><input class="form-control" readonly="true" th:value="${setting.value}" /></td>
+                                    <td>
+                                        <a th:href="@{setting(id=${setting.id})}">
+                                            <svg fill="none" height="24" stroke="black" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                                            </svg>
+                                        </a>
+                                    </td>
+                                    <td><a th:href="@{setting/delete(id=${setting.id})}">
+                                            <svg fill="none" height="24" stroke="black" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path
+                                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                            </svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </div>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+        <div th:replace="~{common::#bottom}"></div>
     </div>
-    <div th:replace="~{common::#bottom}"></div>
-</div>
 
 </body>
 

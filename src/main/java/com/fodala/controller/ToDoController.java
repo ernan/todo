@@ -354,6 +354,7 @@ public class ToDoController {
             this.value = value;
             this.title = title;
         }
+
         static Tab parse(String tabVal) {
             for (Tab t : Tab.values()) {
                 if (t.value.equals(tabVal)) {
