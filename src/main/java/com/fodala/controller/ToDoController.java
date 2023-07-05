@@ -251,7 +251,7 @@ public class ToDoController {
         return "index";
     }
 
-    @GetMapping(value = {"/{tab}/{filter}", "/{tab}/{filter}/{page}"})
+    @GetMapping(value = {"/{tab}/", "/{tab}/{filter}", "/{tab}/{filter}/{page}"})
     public String getTodos(Model model, @PathVariable(value = "tab") String tab,
                            @PathVariable(value = "filter") String filter,
                            @PathVariable(value = "page", required = false) Integer page) {
@@ -264,7 +264,7 @@ public class ToDoController {
         return "index";
     }
 
-    @GetMapping("/list/{id}/{filter}/{page}")
+    @GetMapping(value = {"/list/{id}", "/list/{id}/{filter}", "/list/{id}/{filter}/{page}"})
     public String list(Model model,
                        @PathVariable(value = "id") Integer id,
                        @PathVariable(value = "filter") String filter,

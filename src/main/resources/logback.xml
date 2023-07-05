@@ -8,6 +8,16 @@
         </encoder>
     </appender>
 
+    <!--
+    log4j.logger.org.thymeleaf=DEBUG
+    log4j.logger.org.thymeleaf.TemplateEngine.CONFIG=DEBUG
+    log4j.logger.org.thymeleaf.TemplateEngine.TIMER=DEBUG
+    log4j.logger.org.thymeleaf.TemplateEngine.cache.TEMPLATE_CACHE=DEBUG
+    log4j.logger.org.thymeleaf.TemplateEngine.cache.FRAGMENT_CACHE=DEBUG
+    log4j.logger.org.thymeleaf.TemplateEngine.cache.MESSAGE_CACHE=DEBUG
+    log4j.logger.org.thymeleaf.TemplateEngine.cache.EXPRESSION_CACHE=DEBUG
+    -->
+
     <logger name="com.fodala.mapper.SettingsMapper" level="info">
     </logger>
     <logger name="com.fodala.mapper.SessionMapper" level="info">
