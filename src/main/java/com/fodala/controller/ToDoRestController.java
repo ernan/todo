@@ -44,15 +44,16 @@ public class ToDoRestController {
     }
 
 
-    @PatchMapping("/todo/{id}")
-    public ResponseEntity<ToDo> setCompleted(@PathVariable Integer id) {
-        ToDo result = toDoService.findById(id);
-        result.setCompleted(1);
-        toDoService.update(result);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .buildAndExpand(result.getId()).toUri();
-        return ResponseEntity.ok().header("Location", location.toString()).
-                build();
+    @GetMapping("/todo/completed/{id}")
+    public ToDo completed(@PathVariable Integer id) {
+        toDoService.completed(id);
+        return toDoService.findById(id);
+    }
+
+    @GetMapping("/todo/important/{id}")
+    public ToDo important(@PathVariable Integer id) {
+        toDoService.important(id);
+        return toDoService.findById(id);
     }
 
     @RequestMapping(value = "/todo", method = {

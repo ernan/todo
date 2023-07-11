@@ -45,4 +45,6 @@ public interface ToDoService {
     List<ToDo> listItems(Integer id);
 
     void insertListItem(Integer listId, Integer toDoId);
+
+    List<ToDo> getToDos(Map<String, String> params);
 }

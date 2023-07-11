@@ -279,7 +279,7 @@ public class ToDoController {
         return "index";
     }
 
-    private List<ToDo> filter(Filter filter, List<ToDo> toDos) {
+    public static List<ToDo> filter(Filter filter, List<ToDo> toDos) {
         if (Filter.ALL == filter) {
             return toDos;
         } else {
@@ -311,7 +311,7 @@ public class ToDoController {
     }
 
 
-    enum Filter {
+    public enum Filter {
         ALL("all", -1, " 1 = 1 "),
         ACTIVE("active", 0, " completed = 0 "),
         COMPLETED("completed", 1, " completed = 1 ");
@@ -337,7 +337,7 @@ public class ToDoController {
         }
     }
 
-    enum Tab {
+    public enum Tab {
         CALENDAR("calendar", "Calendar"),
         IMPORTANT("important", "Important"),
         LIST("list", "List"),

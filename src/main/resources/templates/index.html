@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head th:replace="~{common::#header}"></head>
 
 <body class="container">
@@ -33,9 +32,10 @@
                 </div>
             </form>
             <div class="card">
-                <table class="table table-hover table-striped">
+                <table id="table">
                     <thead>
                     <tr>
+                        <th>id</th>
                         <th></th>
                         <th></th>
                         <th>Title</th>
@@ -43,108 +43,9 @@
                         <th>Start</th>
                         <th>End</th>
                         <th></th>
-                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="todo : ${todos}">
-                        <td>
-                            <form method="post" th:action="@{/completedStatus}"
-                                  th:id="'completed_' + ${todo.id}">
-                                <div th:replace="~{common::#hidden}"></div>
-                                <div th:if="${todo.completed} == 1">
-                                    <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round"
-                                         stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
-                                         xmlns="http://www.w3.org/2000/svg">
-                                        <g>
-                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                            <polyline points="22 4 12 14.01 9 11.01"/>
-                                            <rect class="btn" height="24" onclick="$(this).closest('form').submit();"
-                                                  width="24" x="0"
-                                                  y="0"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <div th:unless="${todo.completed} == 1">
-                                    <svg fill="none" height="24" stroke="currentColor"
-                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                         viewBox="0 0 24 24"
-                                         width="24" xmlns="http://www.w3.org/2000/svg">
-                                        <g>
-                                            <circle cx="12" cy="12" r="10"/>
-                                            <rect class="btn" height="24" onclick="$(this).closest('form').submit();"
-                                                  width="24" x="0"
-                                                  y="0"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                            </form>
-                        </td>
-                        <td>
-                            <form method="post" th:action="@{/importantStatus}"
-                                  th:id="'important_' + ${todo.id}">
-                                <div th:replace="~{common::#hidden}"></div>
-                                <div th:if="${todo.important} == 1">
-                                    <svg fill="gold" height="24" stroke="currentColor"
-                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                         viewBox="0 0 24 24"
-                                         width="24" xmlns="http://www.w3.org/2000/svg">
-                                        <g>
-                                            <polygon
-                                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                            <rect class="btn" height="24" onclick="$(this).closest('form').submit();"
-                                                  width="24" x="0"
-                                                  y="0"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <div th:unless="${todo.important} == 1">
-                                    <svg fill="none" height="24" stroke="currentColor"
-                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                         viewBox="0 0 24 24"
-                                         width="24" xmlns="http://www.w3.org/2000/svg">
-                                        <g>
-                                            <polygon
-                                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                                            <rect class="btn" height="24" onclick="$(this).closest('form').submit();"
-                                                  width="24" x="0"
-                                                  y="0"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                            </form>
-                        </td>
-                        <td th:text="${todo.title}">todo 1</td>
-                        <td th:text="${todo.status}">Initial</td>
-                        <td th:text="${todo.start}"></td>
-                        <td th:text="${todo.end}"></td>
-                        <td><a th:href="@{/todo(id=${todo.id})}">
-                            <svg fill="none" height="24" stroke="black"
-                                 stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                 viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                <g>
-                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
-                                </g>
-                            </svg>
-                        </a>
-                        </td>
-                        <td>
-                            <form method="post" th:action="@{/delete}" th:id="'delete_' + ${todo.id}">
-                                <div th:replace="~{common::#hidden}"></div>
-                                <svg fill="none" height="24" stroke="currentColor"
-                                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
-                                     width="24" xmlns="http://www.w3.org/2000/svg">
-                                    <g>
-                                        <polyline points="3 6 5 6 21 6"/>
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                                        <rect class="btn" height="24" onclick="$(this).closest('form').submit();"
-                                              width="24" x="0"
-                                              y="0"/>
-                                    </g>
-                                </svg>
-                            </form>
-                        </td>
-                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -154,9 +55,111 @@
     <div th:replace="~{common::#bottom}"></div>
     <input id="listNames" th:value="@{/api/list/names}" type="hidden"/>
     <input id="list" th:value="@{/api/list/}" type="hidden"/>
-
 </div>
 
-</body>
 
+<script>
+    const getTableButton = (id, row, icon) => {
+        return `<button class="btn btn-table">
+            <i class="${id} far ${icon}" data-id="${row.id}"></i>
+            </button>`;
+    }
+
+    let currentTab = '[[${currentTab}]]';
+    let filter = '[[${filter}]]';
+    let page = '[[${page}]]';
+    let listId = '[[${listId}]]';
+    console.log("currentTab: " + currentTab);
+    console.log("filter: " + filter);
+    console.log("page: " + page);
+    console.log("listId: " + listId);
+
+    $(document).ready(function() {
+        let endpoint = '[[@{/api/todo}]]';
+        console.log('Getting todos: ' + endpoint);
+        fetch(endpoint, {
+            method: 'GET',  // or 'POST'
+            headers: {
+                'page': page,
+                'listId': listId,
+                'filter': filter,
+                'currentTab': currentTab
+              },
+            })
+        .then(response => response.json())
+        .then(data => {
+             $('#table').dataTable({
+                "bProcessing": true,
+                data: data,
+                columns: [
+                    { data: "id", "visible": false},
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            let icon = (data["completed"] == 1) ? 'fa-check-circle' : 'fa-circle';
+                            return getTableButton('completed-btn',row, icon);
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            let icon = (data["important"] == 1) ? 'fa-star text-warning' : 'fa-star';
+                            return getTableButton('important-btn', row, icon);
+                        }
+                    },
+                    { data: "title"},
+                    { data: "status"},
+                    { data: "start"},
+                    { data: "end"},
+                    { data: "created"}
+                ],
+            });
+         })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    $('#table').on('click', '.important-btn', function() {
+        let id = $(this).data('id');
+        markImportant(id);
+    });
+
+    $('#table').on('click', '.completed-btn', function() {
+        let id = $(this).data('id');
+        markCompleted(id);
+    });
+
+    function refreshRows (data) {
+        let table = $('#table').dataTable().api();
+        var index = table.column(0).data().indexOf(data.id);
+        table.row(index).data(data);
+    }
+
+const markImportant = (id) => {
+    let endpoint = '[[@{/api/todo/important/}]]' + id;
+    console.log('Marking important: ' + endpoint);
+    getData(endpoint);
+};
+
+const markCompleted = (id) => {
+    let endpoint = '[[@{/api/todo/completed/}]]' + id;
+    console.log('Marking complete: ' + endpoint);
+    getData(endpoint);
+};
+
+
+    const getData = (endpoint) => {
+        console.log('Getting todos: ' + endpoint);
+        fetch(endpoint)
+        .then(response => response.json())
+        .then(data => {
+            refreshRows(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    };
+</script>
+</body>
 </html>

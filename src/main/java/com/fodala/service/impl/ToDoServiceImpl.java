@@ -1,5 +1,6 @@
 package com.fodala.service.impl;
 
+import com.fodala.controller.ToDoController;
 import com.fodala.mapper.ToDoMapper;
 import com.fodala.pojo.ToDo;
 import com.fodala.pojo.ToDoHistory;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -121,4 +123,29 @@ public class ToDoServiceImpl implements ToDoService {
         mapper.insertListItem(toDoId, listId);
     }
 
+    @Override
+    public List<ToDo> getToDos(Map<String, String> params) {
+        ToDoController.Filter filter = ToDoController.Filter.valueOf(params.get("filter"));
+        ToDoController.Tab tab = ToDoController.Tab.valueOf(params.get("tab"));
+        List<ToDo> result;
+        switch (tab) {
+            case PLANNED -> {
+                LocalDateTime start = LocalDateTime.now();
+                LocalDateTime end = LocalDateTime.now().plusYears(100L);
+                result = findByDate(start, end);
+            }
+            case MY_DAY -> {
+                LocalDateTime start = LocalDateTime.now();
+                LocalDateTime end = LocalDateTime.now().plusDays(1L);
+                result = findByDate(start, end);
+            }
+            case IMPORTANT -> {
+                result = filter(Collections.singletonMap("important", 1));
+            }
+            default -> {
+                result = all();
+            }
+        }
+        return ToDoController.filter(filter, result);
+    }
 }

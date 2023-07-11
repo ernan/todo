@@ -12,7 +12,7 @@
             <table data-pagination="true" id="table">
                 <thead>
                 <tr>
-                    <th data-field="important">Important</th>
+                    <th data-field="important"></th>
                     <th data-field="title">Title</th>
                     <th data-field="start">Start</th>
                     <th data-field="end">End</th>
@@ -25,15 +25,54 @@
     </div>
     <div th:replace="~{common::#bottom}"></div>
     <input id="notifications" th:value="@{/api/notifications}" type="hidden"/>
+
+    <div type="hidden">
+        <div id="important_button" th:replace="~{common::#important_button}"></div>
+    </div>
+
+
 </div>
 <script>
-    var $table = $('#table');
-    $(function() {
-        var url = $("#notifications").val();
-        $.get(url).then(function (res) {
-            $table.bootstrapTable({data: res})
+    $(document).ready(function() {
+        let endpoint = '[[@{/api/notifications}]]';
+        console.log('Getting history: ' + endpoint);
+        fetch(endpoint)
+        .then(response => response.json())
+        .then(data => {
+            $('#table').dataTable({
+                "bProcessing": true,
+                data: data,
+                columns: [
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return (data["important"] == 1)
+                                ? '<i class="fas fa-star text-warning"></i>'
+                                : '<i class="far fa-star"></i>';
+                        }
+                    },
+                    { data: "title"},
+                    {
+                        data: null,
+                        render: function(data) {
+                            return data["start"] ? data["start"] : '';
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return data["end"] ? data["end"] : '';
+                        }
+                    },
+                    { data: "updated"},
+                    { data: "created"}
+                ],
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
-    })
+    });
 </script>
 </body>
 </html>

@@ -118,6 +118,7 @@ insert into todo(title, description, status, start, `end`, completed) VALUES ('A
 insert into todo(title, description, status, start, `end`, completed) VALUES ('Write a product review', 'Life', 'New', strftime('%Y-%m-%d','now', '-1 day'), strftime('%Y-%m-%d','now'), 1);
 insert into todo(title, description, status, start, `end`, completed) VALUES ('Reflect on personal achievements', 'Life', 'New', strftime('%Y-%m-%d','now', '-1 day'), strftime('%Y-%m-%d','now'), 1);
 
+
 insert into setting(section, name, value) VALUES ('default', 'Theme', 'Light');
 insert into setting(section, name, value) VALUES ('default', 'View Completed', 'False');
 insert into setting(section, name, value) VALUES ('ui', 'selectedColor', 'blue');
