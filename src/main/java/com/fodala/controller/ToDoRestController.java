@@ -45,7 +45,7 @@ public class ToDoRestController {
 
     @GetMapping(value = {"/todo"})
     public List<ToDo> getTodos(@RequestHeader Map<String, String> headers) {
-        List<String> keys = List.of("tab", "filter", "page", "listId");
+        List<String> keys = List.of("tab", "filter", "page", "list_id");
         Map<String, String> filter = headers.entrySet()
                 .stream()
                 .filter(entry -> keys.contains(entry.getKey()))

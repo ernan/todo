@@ -142,6 +142,9 @@ public class ToDoServiceImpl implements ToDoService {
             case IMPORTANT -> {
                 result = filter(Collections.singletonMap("important", 1));
             }
+            case LIST -> {
+                result = listItems(Integer.valueOf(params.get("list_id")));
+            }
             default -> {
                 result = all();
             }
