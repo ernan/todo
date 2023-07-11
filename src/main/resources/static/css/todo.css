@@ -24,9 +24,11 @@
 }
 .btn-table:hover {
   border-color: #D3D3D3 !important;
+  background-color: #007bff; /* Example background color */
+  color: #fff; /* Example text color *
 }
 
-rect.btn {
+.rect.btn {
   stroke: #fff;
   fill: #fff;
   fill-opacity: 0;

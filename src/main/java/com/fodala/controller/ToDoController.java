@@ -32,6 +32,16 @@ public class ToDoController {
     @Autowired
     private SettingsService settingsService;
 
+    public static List<ToDo> filter(Filter filter, List<ToDo> toDos) {
+        if (Filter.ALL == filter) {
+            return toDos;
+        } else {
+            return toDos.stream()
+                    .filter(toDo -> Objects.equals(filter.completed, toDo.getCompleted()))
+                    .collect(Collectors.toList());
+        }
+    }
+
     Optional<String> getPreviousPageByRequest(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);
     }
@@ -277,16 +287,6 @@ public class ToDoController {
         model.addAttribute("listId", id);
         model.addAttribute("title", getListName(id));
         return "index";
-    }
-
-    public static List<ToDo> filter(Filter filter, List<ToDo> toDos) {
-        if (Filter.ALL == filter) {
-            return toDos;
-        } else {
-            return toDos.stream()
-                    .filter(toDo -> Objects.equals(filter.completed, toDo.getCompleted()))
-                    .collect(Collectors.toList());
-        }
     }
 
     List<ToDo> getToDos(String tab) {

@@ -43,6 +43,7 @@
                         <th>Start</th>
                         <th>End</th>
                         <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -61,7 +62,7 @@
 <script>
     const getTableButton = (id, row, icon) => {
         return `<button class="btn btn-table">
-            <i class="${id} far ${icon}" data-id="${row.id}"></i>
+            <i class="${id} ${icon}" data-id="${row.id}"></i>
             </button>`;
     }
 
@@ -96,14 +97,14 @@
                     {
                         data: null,
                         render: function(data, type, row) {
-                            let icon = (data["completed"] == 1) ? 'fa-check-circle' : 'fa-circle';
-                            return getTableButton('completed-btn',row, icon);
+                            let icon = (data["completed"] == 1) ? 'fas fa-check-circle' : 'far fa-circle';
+                            return getTableButton('completed-btn', row, icon);
                         }
                     },
                     {
                         data: null,
                         render: function(data, type, row) {
-                            let icon = (data["important"] == 1) ? 'fa-star text-warning' : 'fa-star';
+                            let icon = (data["important"] == 1) ? 'fas fa-star text-warning' : 'far fa-star';
                             return getTableButton('important-btn', row, icon);
                         }
                     },
@@ -111,7 +112,18 @@
                     { data: "status"},
                     { data: "start"},
                     { data: "end"},
-                    { data: "created"}
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return getTableButton('edit-btn', row, 'fas fa-pen');
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return getTableButton('delete-btn', row, 'fas fa-trash');
+                        }
+                    }
                 ],
             });
          })
@@ -122,44 +134,65 @@
 
     $('#table').on('click', '.important-btn', function() {
         let id = $(this).data('id');
-        markImportant(id);
+        let endpoint = '[[@{/api/todo/important/}]]' + id;
+        console.log('Marking important: ' + endpoint);
+        getData(endpoint);
     });
 
     $('#table').on('click', '.completed-btn', function() {
         let id = $(this).data('id');
-        markCompleted(id);
+        let endpoint = '[[@{/api/todo/completed/}]]' + id;
+        console.log('Marking complete: ' + endpoint);
+        getData(endpoint);
     });
 
-    function refreshRows (data) {
-        let table = $('#table').dataTable().api();
-        var index = table.column(0).data().indexOf(data.id);
-        table.row(index).data(data);
-    }
+    $('#table').on('click', '.edit-btn', function() {
+        let id = $(this).data('id');
+        let endpoint = '[[@{/todo?id=}]]' + id;
+        console.log('Navigation to: ' + endpoint);
+        window.location.href = endpoint;
+    });
 
-const markImportant = (id) => {
-    let endpoint = '[[@{/api/todo/important/}]]' + id;
-    console.log('Marking important: ' + endpoint);
-    getData(endpoint);
-};
+    $('#table').on('click', '.delete-btn', function() {
+        let id = $(this).data('id');
+        let endpoint = '[[@{/api/todo/delete/}]]' + id;
+        console.log('Deleting todo with id: ' + id);
+        $.ajax({
+          url: endpoint,
+          type: 'DELETE',
+          dataType: 'json',
+          success: function() {
+            console.log('DELETE request completed successfully.');
+            let table = $('#table').dataTable().api();
+            var index = table.column(0).data().indexOf(id);
+            console.log('Removing row: ' + index + ' with id: ' + id);
+            table.row(index).remove().draw();
+          },
+          error: function(xhr, textStatus, errorThrown) {
+            console.error('An error occurred during the DELETE request:', errorThrown);
+          }
+        });
+    });
 
-const markCompleted = (id) => {
-    let endpoint = '[[@{/api/todo/completed/}]]' + id;
-    console.log('Marking complete: ' + endpoint);
-    getData(endpoint);
-};
-
-
-    const getData = (endpoint) => {
+    function getData(endpoint) {
         console.log('Getting todos: ' + endpoint);
         fetch(endpoint)
         .then(response => response.json())
         .then(data => {
-            refreshRows(data);
+            refreshRow(data);
         })
         .catch(error => {
             console.error('Error:', error);
         });
-    };
+    }
+
+    function refreshRow(data) {
+        let table = $('#table').dataTable().api();
+        var index = table.column(0).data().indexOf(data.id);
+        console.log('Refreshing row: ' + index + ' with data: ' + JSON.stringify(data));
+        table.row(index).data(data);
+    }
+
 </script>
 </body>
 </html>

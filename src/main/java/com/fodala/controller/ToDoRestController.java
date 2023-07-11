@@ -68,18 +68,11 @@ public class ToDoRestController {
         return ResponseEntity.created(location).build();
     }
 
-    @DeleteMapping("/todo/{id}")
+    @DeleteMapping("/todo/delete/{id}")
     public ResponseEntity<ToDo> deleteToDo(@PathVariable Integer id) {
         toDoService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-    @DeleteMapping("/todo")
-    public ResponseEntity<ToDo> deleteToDo(@RequestBody ToDo toDo) {
-        toDoService.delete(toDo.getId());
-        return ResponseEntity.noContent().build();
-    }
-
 
     @ExceptionHandler
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)

@@ -53,7 +53,7 @@ public class DataLoaderImpl implements DataLoader {
         try (Connection connection = ds.getConnection();
              PreparedStatement statement =
                      connection.prepareStatement("INSERT INTO " + tableName + "(name, uploaded_path, file_size, file_type, data) VALUES (?,?,?,?,?)");
-        		FileInputStream inputStream = new FileInputStream(new File(filePath))
+             FileInputStream inputStream = new FileInputStream(new File(filePath))
         ) {
             File file = new File(filePath);
             statement.setString(1, file.getName());
