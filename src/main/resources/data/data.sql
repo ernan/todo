@@ -1,3 +1,10 @@
+insert into setting(section, name, value) VALUES ('default', 'Theme', 'Light');
+insert into setting(section, name, value) VALUES ('default', 'View Completed', 'False');
+insert into setting(section, name, value) VALUES ('ui', 'selectedColor', 'blue');
+insert into setting(section, name, value) VALUES ('ui', 'completedColor', 'grey');
+insert into setting(section, name, value) VALUES ('ui', 'Max ToDo Items', '5000');
+insert into setting(section, name, value) VALUES ('ui', 'Max List Items', '5');
+
 insert into todo(title, description, status) VALUES ('Buy bread', 'Shopping', 'New');
 insert into todo(title, description, status) VALUES ('Buy milk', 'Shopping', 'New');
 insert into todo(title, description, status) VALUES ('Buy tea', 'Shopping', 'New');
@@ -117,14 +124,6 @@ insert into todo(title, description, status, start, `end`, completed) VALUES ('V
 insert into todo(title, description, status, start, `end`, completed) VALUES ('Attend a photography workshop', 'Life', 'New', strftime('%Y-%m-%d','now', '-1 day'), strftime('%Y-%m-%d','now'), 1);
 insert into todo(title, description, status, start, `end`, completed) VALUES ('Write a product review', 'Life', 'New', strftime('%Y-%m-%d','now', '-1 day'), strftime('%Y-%m-%d','now'), 1);
 insert into todo(title, description, status, start, `end`, completed) VALUES ('Reflect on personal achievements', 'Life', 'New', strftime('%Y-%m-%d','now', '-1 day'), strftime('%Y-%m-%d','now'), 1);
-
-
-insert into setting(section, name, value) VALUES ('default', 'Theme', 'Light');
-insert into setting(section, name, value) VALUES ('default', 'View Completed', 'False');
-insert into setting(section, name, value) VALUES ('ui', 'selectedColor', 'blue');
-insert into setting(section, name, value) VALUES ('ui', 'completedColor', 'grey');
-insert into setting(section, name, value) VALUES ('ui', 'Max ToDo Items', '10');
-insert into setting(section, name, value) VALUES ('ui', 'Max List Items', '5');
 
 insert into list(name) VALUES ('Goals 2023');
 insert into list(name) VALUES ('Goals 2022');

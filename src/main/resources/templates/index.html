@@ -66,11 +66,11 @@
             </button>`;
     }
 
-    let currentTab = '[[${currentTab}]]';
+    let tab = '[[${currentTab}]]';
     let filter = '[[${filter}]]';
     let page = '[[${page}]]';
     let listId = '[[${listId}]]';
-    console.log("currentTab: " + currentTab);
+    console.log("tab: " + tab);
     console.log("filter: " + filter);
     console.log("page: " + page);
     console.log("listId: " + listId);
@@ -79,12 +79,12 @@
         let endpoint = '[[@{/api/todo}]]';
         console.log('Getting todos: ' + endpoint);
         fetch(endpoint, {
-            method: 'GET',  // or 'POST'
+            method: 'GET',
             headers: {
                 'page': page,
                 'listId': listId,
                 'filter': filter,
-                'currentTab': currentTab
+                'tab': tab
               },
             })
         .then(response => response.json())

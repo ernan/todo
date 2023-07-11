@@ -125,8 +125,8 @@ public class ToDoServiceImpl implements ToDoService {
 
     @Override
     public List<ToDo> getToDos(Map<String, String> params) {
-        ToDoController.Filter filter = ToDoController.Filter.valueOf(params.get("filter"));
-        ToDoController.Tab tab = ToDoController.Tab.valueOf(params.get("tab"));
+        ToDoController.Filter filter = ToDoController.Filter.parse(params.get("filter"));
+        ToDoController.Tab tab = ToDoController.Tab.parse(params.get("tab"));
         List<ToDo> result;
         switch (tab) {
             case PLANNED -> {

@@ -327,7 +327,7 @@ public class ToDoController {
             this.where = where;
         }
 
-        static Filter parse(String name) {
+        public static Filter parse(String name) {
             for (Filter t : Filter.values()) {
                 if (t.name.equals(name)) {
                     return t;
@@ -355,7 +355,7 @@ public class ToDoController {
             this.title = title;
         }
 
-        static Tab parse(String tabVal) {
+        public static Tab parse(String tabVal) {
             for (Tab t : Tab.values()) {
                 if (t.value.equals(tabVal)) {
                     return t;

@@ -4,6 +4,8 @@ import com.fodala.pojo.ToDo;
 import com.fodala.service.ToDoService;
 import com.fodala.validation.ToDoValidationError;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +16,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api")
 public class ToDoRestController {
+    private static final Logger logger = LoggerFactory.getLogger(ToDoRestController.class);
 
     @Autowired
     private ToDoService toDoService;
@@ -38,11 +43,18 @@ public class ToDoRestController {
         return toDoService.notifications();
     }
 
-    @GetMapping("/todo")
-    public List<ToDo> toDos() {
-        return toDoService.all();
+    @GetMapping(value = {"/todo"})
+    public List<ToDo> getTodos(@RequestHeader Map<String, String> headers) {
+        List<String> keys = List.of("tab", "filter", "page", "listId");
+        Map<String, String> filter = headers.entrySet()
+                .stream()
+                .filter(entry -> keys.contains(entry.getKey()))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        filter.forEach((key, value) -> {
+            logger.info("Filter Name: {} Filter Value: {}", key, value);
+        });
+        return toDoService.getToDos(filter);
     }
-
 
     @GetMapping("/todo/completed/{id}")
     public ToDo completed(@PathVariable Integer id) {
