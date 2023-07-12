@@ -60,77 +60,98 @@
 
 
 <script>
-    const getTableButton = (id, row, icon) => {
+    $(document).ready(function() {
+        var todoConfig = new Map();
+        todoConfig.set("tab", "[[${currentTab}]]");
+        todoConfig.set("filter", "[[${filter}]]");
+        todoConfig.set("page", "[[${page}]]");
+        todoConfig.set("listId", "[[${listId}]]");
+        window.todoConfig = todoConfig;
+
+        displayTodos(initTable);
+    });
+
+    function getTableButton(id, row, icon) {
         return `<button class="btn btn-table">
             <i class="${id} ${icon}" data-id="${row.id}"></i>
             </button>`;
     }
 
-    let tab = '[[${currentTab}]]';
-    let filter = '[[${filter}]]';
-    let page = '[[${page}]]';
-    let listId = '[[${listId}]]';
-    console.log("tab: " + tab);
-    console.log("filter: " + filter);
-    console.log("page: " + page);
-    console.log("listId: " + listId);
+    function initTable(data) {
+        $('#table').dataTable({
+            "bProcessing": true,
+            data: data,
+            columns: [
+                { data: "id", "visible": false},
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        let icon = (data["completed"] == 1) ? 'fas fa-check-circle' : 'far fa-circle';
+                        return getTableButton('completed-btn', row, icon);
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        let icon = (data["important"] == 1) ? 'fas fa-star text-warning' : 'far fa-star';
+                        return getTableButton('important-btn', row, icon);
+                    }
+                },
+                { data: "title"},
+                { data: "status"},
+                { data: "start"},
+                { data: "end"},
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        return getTableButton('edit-btn', row, 'fas fa-pen');
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        return getTableButton('delete-btn', row, 'fas fa-trash');
+                    }
+                }
+            ],
+        });
+    }
 
-    $(document).ready(function() {
+    $('.btn-filter').click(function() {
+        console.log('btn-filter clicked: ' + $(this).data('filter'));
+        $('.btn-filter').not(this).removeClass('active');
+        $(this).addClass('active');
+        window.todoConfig.set('filter', $(this).data('filter'));
+        displayTodos(refreshTable)
+    });
+
+    function refreshTable(data) {
+        let table = $('#table').dataTable().api();
+        table.clear().rows.add(data).draw();
+    }
+
+    function displayTodos(cb) {
+        let config = window.todoConfig;
+        console.log(`displayTodos: tab: ${JSON.stringify(Array.from(config))}`);
         let endpoint = '[[@{/api/todo}]]';
         console.log('Getting todos: ' + endpoint);
         fetch(endpoint, {
             method: 'GET',
             headers: {
-                'page': page,
-                'list_id': listId,
-                'filter': filter,
-                'tab': tab
+                'page': config.get('page') ? config.get('page') : '1',
+                'list_id': config.get('list_id') ? config.get('list_id') : '',
+                'filter': config.get('filter') ? config.get('filter') : 'active',
+                'tab': config.get('tab')
               },
             })
         .then(response => response.json())
         .then(data => {
-             $('#table').dataTable({
-                "bProcessing": true,
-                data: data,
-                columns: [
-                    { data: "id", "visible": false},
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            let icon = (data["completed"] == 1) ? 'fas fa-check-circle' : 'far fa-circle';
-                            return getTableButton('completed-btn', row, icon);
-                        }
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            let icon = (data["important"] == 1) ? 'fas fa-star text-warning' : 'far fa-star';
-                            return getTableButton('important-btn', row, icon);
-                        }
-                    },
-                    { data: "title"},
-                    { data: "status"},
-                    { data: "start"},
-                    { data: "end"},
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return getTableButton('edit-btn', row, 'fas fa-pen');
-                        }
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return getTableButton('delete-btn', row, 'fas fa-trash');
-                        }
-                    }
-                ],
-            });
+            cb(data);
          })
         .catch(error => {
             console.error('Error:', error);
         });
-    });
+    }
 
     $('#table').on('click', '.important-btn', function() {
         let id = $(this).data('id');
@@ -191,6 +212,7 @@
         var index = table.column(0).data().indexOf(data.id);
         console.log('Refreshing row: ' + index + ' with data: ' + JSON.stringify(data));
         table.row(index).data(data);
+        displayTodos(refreshTable)
     }
 </script>
 </body>

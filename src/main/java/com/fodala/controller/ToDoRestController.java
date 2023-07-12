@@ -50,9 +50,7 @@ public class ToDoRestController {
                 .stream()
                 .filter(entry -> keys.contains(entry.getKey()))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-        filter.forEach((key, value) -> {
-            logger.info("Filter Name: {} Filter Value: {}", key, value);
-        });
+        logger.info("Filter: {}", filter);
         return toDoService.getToDos(filter);
     }
 
