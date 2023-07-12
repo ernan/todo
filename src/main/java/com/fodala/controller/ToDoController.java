@@ -65,39 +65,6 @@ public class ToDoController {
         return target;
     }
 
-    @PostMapping("/delete")
-    public String delete(@RequestParam(value = "id") Integer id,
-                         @RequestParam(value = "currentTab") String currentTab,
-                         @RequestParam(value = "filter") String filter,
-                         @RequestParam(value = "page", defaultValue = "1") Integer page,
-                         @RequestParam(value = "listId", required = false) Integer listId) {
-        logger.info("Deleting todo: {}", id);
-        toDoService.delete(id);
-        return "redirect:/" + buildTarget(currentTab, filter, listId, page);
-    }
-
-    @PostMapping("/importantStatus")
-    public String importantStatus(@RequestParam(value = "id") Integer id,
-                                  @RequestParam(value = "currentTab") String currentTab,
-                                  @RequestParam(value = "filter") String filter,
-                                  @RequestParam(value = "page", defaultValue = "1") Integer page,
-                                  @RequestParam(value = "listId", required = false) Integer listId) {
-        logger.info("Marking todo important: {}", id);
-        toDoService.important(id);
-        return "redirect:/" + buildTarget(currentTab, filter, listId, page);
-    }
-
-    @PostMapping("/completedStatus")
-    public String completedStatus(@RequestParam(value = "id") Integer id,
-                                  @RequestParam(value = "currentTab") String currentTab,
-                                  @RequestParam(value = "filter") String filter,
-                                  @RequestParam(value = "page", defaultValue = "1") Integer page,
-                                  @RequestParam(value = "listId", required = false) Integer listId) {
-        logger.info("Completed todo: {}", id);
-        toDoService.completed(id);
-        return "redirect:/" + buildTarget(currentTab, filter, listId, page);
-    }
-
     @GetMapping("/back")
     public ModelAndView back(HttpServletRequest request) {
         String referer = getPreviousPageByRequest(request).orElse("/");
@@ -126,11 +93,11 @@ public class ToDoController {
         List<Setting> list = settingsService.all();
         Map<String, String> settings = list.stream()
                 .collect(Collectors.toMap(Setting::getName, Setting::getValue));
+        model.addAttribute("settings", settings);
         double maxItems = Double.parseDouble(settings.get("Max ToDo Items"));
         model.addAttribute("maxToDoItems", (int) maxItems);
         model.addAttribute("count", toDoService.count());
         model.addAttribute("listNames", toDoService.listNames());
-        model.addAttribute("settings", settings);
         int pages = (int) Math.ceil((double) toDos.size() / maxItems);
         model.addAttribute("pages", pages);
         if (page == null || page < 1) {
@@ -183,7 +150,7 @@ public class ToDoController {
     @PostMapping("/todo")
     public String save(ToDo toDo,
                        @RequestParam(value = "currentTab", required = false) String currentTab,
-                       @RequestParam(value = "listId", required = false) Integer listId,
+                       @RequestParam(value = "list_id", required = false) Integer listId,
                        @RequestParam(value = "filter", required = false) String filter,
                        @RequestParam(value = "page", defaultValue = "1") Integer page,
                        BindingResult bindingResult, Model model) {
@@ -210,7 +177,7 @@ public class ToDoController {
         }
         model.addAttribute("currentTab", currentTab);
         model.addAttribute("title", currentTab);
-        model.addAttribute("listId", listId);
+        model.addAttribute("list_id", listId);
         model.addAttribute("filter", filter);
         model.addAttribute("todo", new ToDo());
         return "redirect:/" + buildTarget(currentTab, filter, listId, page);
@@ -284,7 +251,7 @@ public class ToDoController {
         Filter filter1 = Filter.parse(filter);
         toDos = filter(filter1, toDos);
         addAttributes(model, filter1, Tab.LIST, toDos, page);
-        model.addAttribute("listId", id);
+        model.addAttribute("list_id", id);
         model.addAttribute("title", getListName(id));
         return "index";
     }

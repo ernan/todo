@@ -148,17 +148,17 @@
         <div>
             <ul class="pagination justify-content-end">
                 <li class="page-item" th:classappend="${filter == 'active'} ? 'active':''">
-                    <button data-filter="active" class="btn btn-outline-primary btn-filter">
-                       Active
+                    <button class="btn btn-outline-primary btn-filter active" data-filter="active">
+                        Active
                     </button>
                 </li>
                 <li class="page-item">
-                    <button data-filter="completed" class="btn btn-outline-primary btn-filter" th:classappend="${filter == 'completed'} ? 'active':''">
+                    <button class="btn btn-outline-primary btn-filter" data-filter="completed">
                         Completed
                     </button>
                 </li>
                 <li class="page-item">
-                    <button data-filter="all" class="btn btn-outline-primary btn-filter" th:classappend="${filter == 'all'} ? 'active':''">
+                    <button class="btn btn-outline-primary btn-filter" data-filter="all">
                         All
                     </button>
                 </li>
@@ -214,7 +214,7 @@
     <input name="currentTab" th:value="${currentTab}" type="hidden"/>
     <input name="filter" th:value="${filter}" type="hidden"/>
     <input name="page" th:value="${page}" type="hidden"/>
-    <input name="listId" th:value="${listId != null} ? ${listId}" type="hidden"/>
+    <input name="list_id" th:value="${list_id != null} ? ${list_id}" type="hidden"/>
 </div>
 
 <div id="thymeleafVars">

@@ -46,5 +46,4 @@ public class ToDoConfig {
             logger.error(e.getMessage(), e);
         }
     }
-
 }
